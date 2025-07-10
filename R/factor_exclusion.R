@@ -15,6 +15,7 @@ factor_exclusion <- function(AS,var=NULL){
 }
 
 exclude_fact <- function(AS,A,B){
+# ici
   con <- matrix(0,AS$nv,AS$nv)
   wei <- numeric(AS$nv)  # cela laissera de 0 pour les variables pas dans AS$pertinent
   cri <- numeric(AS$nv)

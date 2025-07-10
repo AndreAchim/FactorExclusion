@@ -9,12 +9,13 @@ pair_cancel <- function(p,A_V,probe,fun=max,as_list=FALSE){
   # le contraste normalisé est dans $contrast
   # et les projections (pas au carré) dans $ proj
   prd <- A_V %*% c(p,-1)
-  d <- 1 / sqrt(t(prd) %*% prd)
+  d <- -1 / sqrt(t(prd) %*% prd)  # pour ramener le contraste à l'équivalent de c(-p,1)
   contrast <- as.vector(d) * prd
   proj <- t(probe) %*% contrast
   crit <- fun(proj * proj)
-  if (as_list)
+  if (as_list){
     return(list(crit=crit,contrast=contrast,proj=proj))
+  }
   else
     return(crit)
 }
