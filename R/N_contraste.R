@@ -1,4 +1,9 @@
-max_abs <- function(x) max(abs(x))
+max_abs <- function(x){
+  if (length(x)<2)
+    return(999)
+  else
+    max(abs(x))
+}
 
 sc1 <- function(x) {
 # porte x à une somme de carrés de 1.0 sauf si tous des 0 dans x
@@ -22,18 +27,18 @@ max_proj <- function(p,G,a,b,fct=mamami){
 #  return(abs(max(pro)+min(pro)))
 }
 
-paires_bifactorielles <- function(F,corr_crit=.95){
+paires_bifactorielles <- function(F,corr_crit=2){
 # retourne toutes les paires de variables de F qui n'impliquent pas un seul facteur de F
+# sauf celles dont le signal corrèle > corr_crit
   nv <- nrow(F)
   nf <- ncol(F)  # planterait si nf==1
   np <- nv
   for (k in 2:nf)
-    np <- np * (nv-k)
+    np <- np + (nv-k)
 #  paires <- matrix(0,np,2)
   prod_pa <- rep(0,np)
   cor_signal <- rep(0,np)
   p <- 0
-#  browser()
   for (f1 in 1:(nf-1))
     for (j in 1:(nv-1))
       for (f2 in (f1+1):nf)

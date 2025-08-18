@@ -15,6 +15,7 @@ crit_annule_paire <- function (p,A_V,probe,signe=NULL,as_list=FALSE){
   # d <- -1 / sqrt(t(prd) %*% prd)  # pour ramener le contraste à l'équivalent de c(-p,1)
   # contrast <- as.vector(d) * prd
   contrast <- sc1(A_V %*% c(signe*exp(p),-1))
+#  contrast <- A_V %*% c(signe*exp(p),-1)
   proj <- t(probe) %*% contrast
   crit <- max_abs(proj)
 #  crit <- t(proj) %*% proj

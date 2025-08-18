@@ -1,4 +1,4 @@
-pair_cancel <- function(p,A_V,probe,fun=max,as_list=FALSE){
+pair_cancel <- function(p,A_V,probe,fun=max_abs,as_list=FALSE){
   # p est un scalaire
   # A_V est (n,2) deux colonnes dont la somme des carrés est égale à 1.0
   # probe est (n,) autant de colonnes qu'on veut de corréations avec le contraste

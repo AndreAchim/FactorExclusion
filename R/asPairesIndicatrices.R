@@ -3,6 +3,7 @@ asPairesIndicatrices <- function(AS) {
   AS$Cpaires <- combn(AS$pertinent, 2) # tous les sous-ensembles de 2 parmi les variables pertinentes
   nc <- ncol(AS$Cpaires)
   AS$Crit <- rep(0, nc)
+  AS$Prob <- rep(0, nc)
   AS$Corr <- matrix(0, AS$nv, nc)
   AS$Ppaires <- rep(0, nc)
   AS$doublet <- NULL

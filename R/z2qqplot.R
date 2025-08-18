@@ -1,8 +1,8 @@
-z2qqplot <- function(tronc,n,paire){
+z2qqplot <- function(tronc,n,paire,E=1){
   nom <- paste(tronc,n,sep="")
   y <- get(nom)$z2[paire,]
-#  y <- z2[paire,]
-  pr <- sprintf("%s, paire %d ",nom,paire)
+  y <- qchisq(pchisq(y,1)^E,1)
+  pr <- sprintf("%s, paire %d E=%1.2f",nom,paire,E)
 ## Q-Q plot for Chi^2 data against true theoretical distribution:
 #qqplot(qchisq(ppoints(length(y)), df = 1), y, main = c(pr,expression("Q-Q plot for" ~~ {chi^2}[nu == 1])))
   qqplot(qchisq(ppoints(length(y)), df = 1), y, main = pr)

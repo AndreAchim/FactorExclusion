@@ -3,9 +3,10 @@ probNonDoublet <- function(AS, melange) {
   # dont le maximum en valeurs absolues est utilisé ici)
   
   var <- setdiff(AS$pertinent, melange)
-  mc <- max(abs(AS$R[var, melange])) # corrélation maximale des deux variables de mélange avec toutes les autres pertinentes
-  x2 <- mc^2 * (AS$N - 1)
-  pr <- 1 - pchisq(x2, df = 1)^(2 * length(var))
+  dl <- AS$N-2
+  r <- max(abs(AS$R[var, melange])) # corrélation maximale des deux variables de mélange avec toutes les autres pertinentes
+  t <- r/sqrt((1-r*r)/dl)
+  pr <- 1 - (1-2*pt(-t,dl))^(2 * length(var))
   
   return(pr)
 }

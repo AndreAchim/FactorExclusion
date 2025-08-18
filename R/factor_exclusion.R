@@ -14,14 +14,18 @@ factor_exclusion <- function(AS,var=NULL){
       break 
     }
   }
-  if (is.null(AB))
+  if (is.null(AB)){
+    browser()
     stop("La variable désignée n'a pas d'annulation de son signal")
+    }
   AS$excl_AB <- AB
+  AS$util <- setdiff(AS$pertinent,AB)
+  n <- AS$N-1
 #  browser()
   for (k in 1:length(AB)){
-    out <- exclude_fact(AS,AB[k],AB[-k])
-    AS$excl_we[[k]] <- out$weigths
-    AS$excl_cr[[k]] <- out$crit 
+    out <- exclude_fact(AS$GS[,AS$util],AS$GS[,AB[k]],AS$GS[,AB[-k]])
+    AS$excl_we[[k]] <- out$weights
+    AS$excl_cr[[k]] <- out$crit * n 
     AS$excl_co[[k]] <- out$contrasts 
     AS$excl_pr[[k]] <- out$proj
 #    AS$excl[[k]] <- out
@@ -29,24 +33,33 @@ factor_exclusion <- function(AS,var=NULL){
   return(AS)
 }
 
-exclude_fact <- function(AS,A,B){
-# procède à l'annulation de toutes les variables (sauf celles dans A ou B)
-# avec la variable de rang A avec les variables de rangs B comme témoins
-# retourne une liste incluant le contraste et le critère 
-  con <- matrix(0,AS$nv,AS$nv)
-  wei <- numeric(AS$nv)  # cela laissera de 0 pour les variables pas dans AS$pertinent
-  cri <- numeric(AS$nv)
-  pro <- matrix(0,length(B),AS$nv)
-  n=AS$N-1
-  for (v in AS$pertinent){
-    if(!any(v==c(A,B))){
-      p <- optimize(pair_cancel,c(-100,100),AS$GS[,c(A,v)],AS$GS[,B])
-      wei[v] <- p$minimum
-      out <- pair_cancel(wei[v],AS$GS[,c(A,v)],AS$GS[,B],as_list=TRUE)
-      con[,v] <- out$contrast
-      cri[v] <- out$crit * n
-      pro[,v] <- out$proj
-    }
+exclude_fact <- function(CIBLES,OTE,TEMOINS){
+# procède à l'annulation de toutes les variables de CIBLES
+# avec la variable OTE, avec les variables de TEMOINS comme temoins
+# retourne une liste incluant le contraste et le  (pas multiplié par (N-1))
+  if (is.matrix(CIBLES)){
+    nv <- ncol(CIBLES)
+    nc <- nrow(CIBLES)
+  } else {
+    nv <- 1
+    nc <- length(CIBLES)
+  }
+  if (is.matrix(TEMOINS))
+    nt <- ncol(TEMOINS)
+  else
+    nt <- 1
+  con <- matrix(0,nc,nv)
+  wei <- numeric(nv)  # cela laissera des 0 pour les variables pas dans AS$pertinent
+  cri <- numeric(nv)
+  pro <- matrix(0,nt,nv)
+  for (v in 1:nv){
+    CiblOte <- cbind(CIBLES[,v],OTE)
+    p <- optimize(pair_cancel,c(-1000,1000),CiblOte,TEMOINS)
+    wei[v] <- p$minimum
+    out <- pair_cancel(wei[v],cbind(CIBLES[,v,drop = FALSE],OTE),TEMOINS,as_list=TRUE)
+    con[,v] <- out$contrast
+    cri[v] <- out$crit
+    pro[,v] <- out$proj
   }
   return(list(weights=wei,crit=cri,contrasts=con,proj=pro))
 }

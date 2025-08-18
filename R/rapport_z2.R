@@ -1,10 +1,15 @@
-rapport_z2 <- function(Z2,aa=NULL){
-# z2 est (npaires,nrep), aa est la liste des rangs de paires avec annulation attendue
+rapport_z2 <- function(dist,E=1){
+# dist est une liste produite par dist_z2
+# ses champs $z2 et $paires sont utilisée
+#  z2 est (npaires,nrep), aa est la liste des rangs de paires avec annulation attendue
+# E permet de modifier les z2 (voir z2qqplot.R)
   zcrit <- qchisq(c(.75,.999),1)
-  paires <- Z2$paires
-  z2 <- Z2$z2
+  paires <- dist$paires
+  z2 <- dist$z2
 #  browser()
+  z2 <- qchisq(pchisq(z2,1)^E,1)
   for (p in 1:nrow(z2)){
+#    z2[p,] <- qchisq(pchisq(z2[p,],1)^1.7,1)
     ni <- which(is.infinite(z2[p,]))
     if (length(ni)>0)
       z2[p,ni] <- NaN
@@ -18,7 +23,7 @@ rapport_z2 <- function(Z2,aa=NULL){
       z2[p,ni] <- Inf
     nb[4] <- sum(is.nan(z2[p,]))
     nb[5] <- sum(is.infinite(z2[p,]))
-    if (any(aa==p)){
+    if (paires[p,1] < 0){
       mima <- max
       mim <- "max"
       z2[p,z2[p,]==Inf] <- -Inf

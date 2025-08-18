@@ -25,30 +25,17 @@
 #' @examples
 #' res <- SCRoF(N1000_1)
 SCRoF <- function(R, N = NULL, seuils = c(.001,.25)){
-  # Preliminaries ####
-  AS <- list(dat = R)
-  if(is.null(N)) {AS$N = nrow(R)} else {AS$N = N}
-  if(isSymmetric(as.matrix(R))) {AS$R <- R} else {AS$R <- cov(R)}
+  AS <- init_SCA(R,N)
   AS$seuils <- sort(seuils)
-  AS$et <- sqrt(diag(AS$R)) # AA: Ceci est destin?? ?? pouvoir exprimer la solution factorielle en termes des variables d'origine.
-  iet <-  1 / AS$et
-  AS$R <- AS$R*(iet %*% t(iet))
-  if(det(AS$R) < 0) stop("\nLa matrice de corr??lation n'a pas un d??terminant positif.\n")
   rNEST <- Rnest::nest(AS$R, n = AS$N)
   rPA <- Rnest::pa(rNEST)
-  cat("NEST sugg??re", rNEST$nfactors, "facteurs.\n")
-  cat("PA sugg??re", rPA$nfactors, "facteurs.\n")
+  cat("NEST suggère", rNEST$nfactors, "facteurs.\n")
+  cat("PA suggère", rPA$nfactors, "facteurs.\n")
   AS$minFct <- rNEST$nfactors[[1]]
-  
-  # START HERE
-  AS$nv <- ncol(AS$R)
-  AS$GS <- chol(AS$R)
   AS <- asOrphelines(AS) 
   # POC: retirer un conditionnel ici, utiliser deux fois ####
   AS$pertinent <- setdiff(1:AS$nv, AS$orphelines)
-  
-  # SCFA starts here ####
-  AS <- asPairesIndicatrices(AS)
+  # SCRoF starts here ####
   AS <- asGrappes(AS)
   if(is.null(AS$VG)) {cat('\nAucune annulation du signal par paire.\n')}
   AS <- asInitFct_Cor(AS) # CHECK 
