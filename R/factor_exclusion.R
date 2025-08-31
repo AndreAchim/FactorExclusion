@@ -4,6 +4,7 @@ factor_exclusion <- function(AS,var=NULL){
   # ajoute à AS les champs excl_AB donnant les deux variables représentant le facteur exclu
   # A_excl et B_excl les contrastes de chacune des variables hors du facteur de A et B
   # lorsque la variable est partiellement annulée par A ou par B, l'autr servant de témoin de l'annulation
+#browser()
   if (is.null(var)) var <- AS$Z[1,1]
   # trouver la grappe qui contient var
   gr <- AS$VG[[1]]$Gr
@@ -24,10 +25,10 @@ factor_exclusion <- function(AS,var=NULL){
 #  browser()
   for (k in 1:length(AB)){
     out <- exclude_fact(AS$GS[,AS$util],AS$GS[,AB[k]],AS$GS[,AB[-k]])
-    AS$excl_we[[k]] <- out$weights
-    AS$excl_cr[[k]] <- out$crit * n 
-    AS$excl_co[[k]] <- out$contrasts 
-    AS$excl_pr[[k]] <- out$proj
+    AS$excl_weig[[k]] <- out$weights
+    AS$excl_crit[[k]] <- out$crit * n 
+    AS$excl_cont[[k]] <- out$contrasts 
+    AS$excl_proj[[k]] <- out$proj
 #    AS$excl[[k]] <- out
   }
   return(AS)
@@ -36,7 +37,7 @@ factor_exclusion <- function(AS,var=NULL){
 exclude_fact <- function(CIBLES,OTE,TEMOINS){
 # procède à l'annulation de toutes les variables de CIBLES
 # avec la variable OTE, avec les variables de TEMOINS comme temoins
-# retourne une liste incluant le contraste et le  (pas multiplié par (N-1))
+# retourne une liste incluant le contraste et le critère (pas multiplié par (N-1))
   if (is.matrix(CIBLES)){
     nv <- ncol(CIBLES)
     nc <- nrow(CIBLES)
