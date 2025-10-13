@@ -1,4 +1,4 @@
-test_proj <- function(AS,cx,cy,paire=c(1,2)){
+test_proj <- function(AS,cx,cy,paire=c(1,2),srce=NULL){
   # cx et cy sont des rangs de variables; paire donne la paire d'exclusion de dimension. 
   #>>>> Paire devrait devenir un vecteur qui peut contenir plus que 2 variables exclusives au facteur à exclure ###
   # Forme pour chaque cas les contrastes AS$excl_weig[paire[1]][c(cx,cy)] et AS$excl_weig[paire[2]][c(cx,cy)]
@@ -6,29 +6,16 @@ test_proj <- function(AS,cx,cy,paire=c(1,2)){
   ### ci-dessous, description à actualiser
   # En fait la somme et détermine son rang parmi 1000 cas où la moitié des signes seraient inversés
   # Cela est fait en comparant la somme de sous-ensembles aléatoires avec 0
+#browser()
   if (is.null(dim(AS$zdat)))
     AS <- cree_zdat(AS)
-  x <- which(cx==AS$util)
-  y <- which(cy==AS$util)
+  x <- which(cx==AS$excl_cibles)
+  y <- which(cy==AS$excl_cibles)
   if (is.null(x) || is.null(y)) error("cx et cy doivent être des rangs de variables inclus dans AS$util")
-  # # à compléter
-  #   CC <- 0
-  #   for (un in paire)
-  #     for (deux in paire)
-  #       if (un!=deux){
-  #         cc1 <- AS$zdat[,cx] - AS$excl_weig[[un]][x]*AS$zdat[,AS$excl_AB[un]]
-  #         cc2 <- AS$zdat[,cx] - AS$excl_weig[[un]][x]*AS$zdat[,AS$excl_AB[un]]
-  #       }
-  
-  # xy <- c(x,y)
-  # for (k in paire){
-  #   po <- AS$excl_weig[[k]][xy]
-  #   Cont <- AS$zdat[,paire,]
-  C1x <-  AS$zdat[,cx] - AS$excl_weig[[1]][x]*AS$zdat[,AS$excl_AB[1]]
-  C1y <-  AS$zdat[,cy] - AS$excl_weig[[1]][y]*AS$zdat[,AS$excl_AB[1]]
-  C2x <-  AS$zdat[,cx] - AS$excl_weig[[2]][x]*AS$zdat[,AS$excl_AB[2]]
-  C2y <-  AS$zdat[,cy] - AS$excl_weig[[2]][y]*AS$zdat[,AS$excl_AB[2]]
-  #  CC <- (C1x * C2y + C2x * C1y)/2
+  C1x <-  AS$zdat[,cx] - AS$excl_weig[[1]][x]*AS$zdat[,AS$excl_var[1]]
+  C1y <-  AS$zdat[,cy] - AS$excl_weig[[1]][y]*AS$zdat[,AS$excl_var[1]]
+  C2x <-  AS$zdat[,cx] - AS$excl_weig[[2]][x]*AS$zdat[,AS$excl_var[2]]
+  C2y <-  AS$zdat[,cy] - AS$excl_weig[[2]][y]*AS$zdat[,AS$excl_var[2]]
   N=length(C1x)
   out <- vector()
   for (fois in 1:2){
@@ -40,6 +27,7 @@ test_proj <- function(AS,cx,cy,paire=c(1,2)){
       CC <- C1x * C2y 
       r <- sum(CC) / sqrt((t(C1x) %*% C1x) * (t(C2y) %*% C2y))
     }
+    if (length(CC)<5) browser()
     #  proj_moy <- sum(CC)
     # approche par inversion de signes abandonnée au profit du t de Student sur une moyenne
     # proj_crit <- rep(0,1000)

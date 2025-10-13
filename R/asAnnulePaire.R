@@ -1,54 +1,42 @@
 asAnnulePaire <- function(AS, k) {
-  # AS$GS(v,v) est la GrammSchmidt (en triangle supérieur) de R(v,v)
-  # k est un scalaire
+  # AS$GS(v,v) est la transformation chol() (en triangle supérieur) de R(v,v)
+  # k est un scalaire pointant dans AS$Cpaires(np,2)
   # Optimise les variables de la rangée k de AS$Cpaires pour en minimiser le signal
-  # Remplit AS$Crit[k], AS$Ppaires[k] et AS$Corr[,k]
-  # à modifier: pour critère de proj maximale:
-  # AS$Crit[k] est déjà le X2: N-1 fois la somme des corrélations au carré
-  
-  G <- AS$GS
+  # Remplit AS$Crit[k], AS$Ppaires[k], AS$Corr[,k], AS$Prob[k]
+  # AS$absLogPo sert à indiquer une annulation pas réussie (poids très petit ou très grand)
+  # AS$Crit[k] sera max(abs(corrélations du contraste))
+  # AS$Prob pourra être transformé copr devenir des distances pour l'analyse en grappes
   cible <- AS$pertinent
   melange <- AS$Cpaires[, k]
-  lP <- 0
   pd <- probNonDoublet(AS, melange)
-  
-  if (pd < 0.05) {
-    # r <- AS$R[melange[1], melange[2]]
-    # K <- -sign(r)  # le poids fixe pour la 2e variable
-    # lP <- 0  # logarithme de P=1
-    # #POC: remove option and add them in optim
-    # suppressWarnings({
-    # lP <- optim(lP, fn = CritLog,
-    #             method = "Nelder-Mead", 
-    #             control =list(maxit = 1e9,
-    #                           factr = 1e-6,
-    #                           pgtol = 1e-6),
-    #             G = G, combine = melange, K = K, cible = cible)$par
-    # P <- exp(lP)
-# AS$paires ne contient que des variables dans AS$pertinent
-# Faut-il empêcher annule_paire() d'inclure les orpheliens parmi les témoins?
-# Les 0 des orphelines ne vont jamais en faire la projection maximale
-# mais on les aura en projections (nulles). Il ne faudait pas les compter
-# dans le nombre de tests pour ajuter la probabilité
-    ap <- annule_paire(G,melange[1],melange[2],AS$N)
-    P <- ap$po
-    } else {
-    AS$doublet <- rbind(AS$doublet, melange)
-    r <- AS$R[melange[1],melange[2]]
-    t <- r/sqrt((1-r*r)/(AS$N-2))
-    ap$prob <- 2*pt(-abs(t),AS$N-2)
-    K <- 1
+  if (pd < 0.05) {  # si la paire a d'autres corrélations
+    ap <- crit_paire_initiale(AS,melange[1],melange[2])
+  } else {    # si la paire semble dépendre d'un facteur doublet
+    AS$doublet <- rbind(AS$doublet, melange)  # documenter le doublet dans AS
+    r <- AS$R[melange[1],melange[2]]  # corrélation des variables mêmes
+    out <- prodCorr(r,AS$N)
+    cont <- AS$GS[,melange] %*% c(1,-1)
+    corr <- t(sc1(cont)) %*% AS$GS[,-melange]
+    ap <- list(prob=out$p,po=sign(r),crit=max(abs(corr)),corr=corr)
+    ap$po <- sign(r)  # Pour un doublet, les 2 variables auront le même poids en val. abs.
     }
-if (length(AS$Corr[, k]) != length(ap$proj))  browser()
-  
-#  corr <- CritLog(lP, G, melange, cible, K, to.opt = FALSE)$corr
-  AS$Prob[k] <- ap$prob
-  AS$Crit[k] <- -log10(ap$prob)
-  AS$Corr[, k] <- ap$proj
+  if (abs(log(abs(ap$po)))>5){
+    AS$Prob[k] <- .1^abs(log(abs(ap$po)))
+  }
+  else
+    AS$Prob[k] <- ap$prob
+  AS$Crit[k] <- ap$crit
+  AS$Corr[,k] <- ap$corr
   AS$Ppaires[k] <- ap$po
-  
   return(AS)
 }
+
+# AS$Crit <- rep(0, nc)      # max(abs(Corr))
+# AS$Prob <- rep(0, nc)      # corrigé pour le nombre de corrélations
+# AS$Ppaires <- rep(0, nc)   # les poids d'annulation
+# AS$Corr <- matrix(0, AS$nv-2, nc)
+# AS$doublet <- NULL
+
 
 # CritLog <- function(px, G, combine, cible, K, to.opt = TRUE) {
 #   pp <- c(exp(px), K)

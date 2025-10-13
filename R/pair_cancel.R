@@ -1,21 +1,21 @@
-pair_cancel <- function(p,A_V,probe,fun=max_abs,as_list=FALSE){
+pair_cancel <- function(p,A_V,probe,as_list=FALSE){
   # p est un scalaire
-  # A_V est (n,2) deux colonnes dont la somme des carrés est égale à 1.0
+  # A_V est (n,2) deux colonnes dont les sommes des carrés sont égale à 1.0
   # probe est (n,) autant de colonnes qu'on veut de corréations avec le contraste
-  # fun est la fonction à appliquer aux carrés des projections pour établir le critère
   # Si as_list=TRUE, la sortie est une liste plutôt que juste le critère
-  # calcule A_V %*% c(p,-1), lui donne une somme de carrés de 1.0 et y projette probe
-  # met ces projections au carré et en retourne la fonction fun dans $crit
-  # le contraste normalisé est dans $contrast
-  # et les projections (pas au carré) dans $ proj
-  prd <- A_V %*% c(p,-1)
-  d <- -1 / sqrt(t(prd) %*% prd)  # pour ramener le contraste à l'équivalent de c(-p,1)
-  contrast <- as.vector(d) * prd
-  proj <- t(probe) %*% contrast
-  crit <- fun(proj * proj)
+  # calcule le contraste A_V %*% c(1,-p) et projette probe sur le contraste normalisé
+  # produisant des corrélations
+  # retourne dans $crit la plus grande absolue de ces corrélations
+  # le contraste non-normalisé est retourné dans $contrast
+  # les projections sur le contraste non-normalisé dans $proj
+  # et les corrélations dans $corr
+  contrast <- A_V %*% c(1,-p)
+  if (!is.numeric(probe)) browser()
+  corr <- t(probe) %*% sc1(contrast)
+  crit <- max(abs(corr))
   if (as_list){
-    return(list(crit=crit,contrast=contrast,proj=proj))
-  }
-  else
+    browser()
+    return(list(crit=crit,contrast=contrast,corr=corr,proj=t(probe) %*% contrast,contrast=contrast))
+  }else
     return(crit)
 }

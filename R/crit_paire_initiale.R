@@ -66,25 +66,8 @@ crit_paire_initiale <- function(AS,a,b,DT=NULL){
     cr <- li
     for (p in 1:length(li))
       cr[p] <- f_crit(li[p],col,TEMOINS)
-    loc <- minima_locaux(cr)
-    po <- loc$rang
-    lpo <- length(po)
-    if (lpo > 1) # plusieurs minima, il faut choisir
-      po <- po[which.min(loc$val)]
-    if (po>0){
-      pog <- po-1  # gérer d'éventuelles égalités au minimum
-      while (pog>1 && cr[pog]==cr[po]) pog <- pog-1
-      pod <- po+1
-      while (pod<np && cr[pod]==cr[po]) pod <- pod+1
-      limites <- li[c(pog,pod)]
-    } else {
-      lcr <- length(cr)
-      if (cr[1]<cr[lcr]){
-        limites <- li[1:2]
-      } else
-        limites <- li[c(lcr-1,lcr)]
-    }
-#if (!is.null(DT)) browser()
+    limites <- limites_balayage(li,cr)
+    #if (!is.null(DT)) browser()
     out <- optimize(f_crit,limites,col,TEMOINS)
   }
   po <- out$minimum
@@ -105,91 +88,113 @@ crit_paire_initiale <- function(AS,a,b,DT=NULL){
 f_crit <- function(p,col,TEMOINS)
   max(abs(t(sc1(col %*% c(1,-p))) %*%  TEMOINS))
 
+limites_balayage <- function(li,cr){
+  loc <- minima_locaux(cr)
+  po <- loc$rang
+  lpo <- length(po)
+  if (lpo > 1) # plusieurs minima, il faut choisir
+    po <- po[which.min(loc$val)]
+  if (po>0){
+    pog <- po-1  # gérer d'éventuelles égalités au minimum
+    while (pog>1 && cr[pog]==cr[po]) pog <- pog-1
+    pod <- po+1
+    while (pod<np && cr[pod]==cr[po]) pod <- pod+1
+    limites <- li[c(pog,pod)]
+  } else {
+    lcr <- length(cr)
+    if (cr[1]<cr[lcr]){
+      limites <- li[1:2]
+    } else
+      limites <- li[c(lcr-1,lcr)]
+  }
+  return(limites)
+} 
+
 # optise <- function(fun,lim,A,B){
 #   if (!is.numeric(lim) || length(lim)!= 2 || lim[2]<=lim[1]) browser
 #   print(lim)
 #   out <- optimize(fun,lim,A,B) 
 # }
 
-annule_paire <- function(dat,a,b,N=NULL){
-  # dat est (N,nv) ou mieux, (nv,nv) obtenu par chol(corr(data))
-  # Les colonnes de dat doivent avoir une somme de carrés de 1.0.
-  # Produit le meilleur sc1(contraste dat[,c(a,b)] %*% c(1,-p)) pour
-  # minimiser max(abs(proj)) appliqué aux projections des variables 
-  # restantes sur ce contraste normalisé.
-  # ?? Retourne le critère, sa probabilité, le poids, les projections et le contraste optimal.
-  # le critère n'est-il pas -log10(prob) ??
-  nv <- ncol(dat)
-  ns <- nrow(dat)
-  ab <- cbind(dat[,a],dat[,b])  # c'est b qui est pondérée
-  temoins <- dat[,-c(a,b)]
-  nt <- ncol(as.matrix(temoins))
-  
-  opt <- crit_paire_initiale(AS,a,b)
-  
-  limites <- prep_limites_optimize(ab,temoins,signe)
-  # co <- t(dat[,a]) %*% dat[,b]  # corrélation des deux variables
-  # out <- prodCorr(co,AS$N)
-  # if (out$p > .4) {  # son signe pourrait ne pas être correct: pas de logarithme
-  #   signe <- 0
-  #   lp <- seq(-200,200,20)
-  #   browser()
-  # }
-  # else {
-  #   signe <- sign(co)
-  #   lp <- seq(-3,3,.3)
-  #   elp <- exp(lp)
-  # }
-  # # d'abord balayer la gamme raisonnable du poids recherché
-  # np <- length(lp)
-  # cr <- rep(0,np)  # critère pour chaque lp
-  # for (l in 1:np)
-  #   cr[l] <- crit_annule_paire(lp[l],ab,temoins,signe)
-  # loc <- minima_locaux(cr)
-  # po <- loc$rang
-  # lpo <- length(po)
-  # if (signe==0){
-  #   if (lpo == 0)  # pas de minimum dans la gamme balayée
-  #     if (cr[1] < cr[np])
-  #       limites <- c(-5000,-200)
-  #   else
-  #     limites <- c(200,5000)
-  # }
-  # else 
-  #   if (lpo == 0){  # pas de minimum dans la gamme balayée
-  #     if (cr[1] < cr[np])
-  #       limites <- c(-5,-2.7)
-  #     else
-  #       limites <- c(2.7,5)
-  #   }
-  # else {
-  #   if (lpo > 1) # plusieurs minima, il faut choisir
-  #     po <- po[which.min(loc$val)]
-  #   pog <- po-1  # gérer d'éventuelles égalités au minimum
-  #   while (pog>1 && cr[pog]==cr[po]) pog <- pog-1
-  #   pod <- po+1
-  #   while (pod<np && cr[pod]==cr[po]) pod <- pod+1
-  #   limites <- lp[c(pog,pod)]
-  #   if (pog >= pod) browser()
-  # }
-  out <- optimize(crit_annule_paire,limites,ab,temoins,signe)
-  resultat <- crit_annule_paire(out$minimum,ab,temoins,signe,as_list=TRUE)
-  proj <- rep(0,nv)
-  if (is.null(resultat$proj)) browser()
-  proj[-c(a,b)] <- resultat$proj
-  #    browser()
-  resultat$proj <- proj
-  resultat$po <- signe * exp(out$minimum)
-}
-if (!is.null(N)){
-  r <- resultat$crit
-  t <- r/sqrt((1-r*r)/(N-2))
-  p <- 2*pt(-abs(t),N-2)
-  if (nt>1)
-    p <- max(1-(1-p)^nt,1e-15)
-  resultat$prob <- p
-  return(resultat)
-}
+# annule_paire <- function(dat,a,b,N=NULL){
+#   # dat est (N,nv) ou mieux, (nv,nv) obtenu par chol(corr(data))
+#   # Les colonnes de dat doivent avoir une somme de carrés de 1.0.
+#   # Produit le meilleur sc1(contraste dat[,c(a,b)] %*% c(1,-p)) pour
+#   # minimiser max(abs(proj)) appliqué aux projections des variables 
+#   # restantes sur ce contraste normalisé.
+#   # ?? Retourne le critère, sa probabilité, le poids, les projections et le contraste optimal.
+#   # le critère n'est-il pas -log10(prob) ??
+#   nv <- ncol(dat)
+#   ns <- nrow(dat)
+#   ab <- cbind(dat[,a],dat[,b])  # c'est b qui est pondérée
+#   temoins <- dat[,-c(a,b)]
+#   nt <- ncol(as.matrix(temoins))
+#   
+#   opt <- crit_paire_initiale(AS,a,b)
+#   
+#   limites <- prep_limites_optimize(ab,temoins,signe)
+#   # co <- t(dat[,a]) %*% dat[,b]  # corrélation des deux variables
+#   # out <- prodCorr(co,AS$N)
+#   # if (out$p > .4) {  # son signe pourrait ne pas être correct: pas de logarithme
+#   #   signe <- 0
+#   #   lp <- seq(-200,200,20)
+#   #   browser()
+#   # }
+#   # else {
+#   #   signe <- sign(co)
+#   #   lp <- seq(-3,3,.3)
+#   #   elp <- exp(lp)
+#   # }
+#   # # d'abord balayer la gamme raisonnable du poids recherché
+#   # np <- length(lp)
+#   # cr <- rep(0,np)  # critère pour chaque lp
+#   # for (l in 1:np)
+#   #   cr[l] <- crit_annule_paire(lp[l],ab,temoins,signe)
+#   # loc <- minima_locaux(cr)
+#   # po <- loc$rang
+#   # lpo <- length(po)
+#   # if (signe==0){
+#   #   if (lpo == 0)  # pas de minimum dans la gamme balayée
+#   #     if (cr[1] < cr[np])
+#   #       limites <- c(-5000,-200)
+#   #   else
+#   #     limites <- c(200,5000)
+#   # }
+#   # else 
+#   #   if (lpo == 0){  # pas de minimum dans la gamme balayée
+#   #     if (cr[1] < cr[np])
+#   #       limites <- c(-5,-2.7)
+#   #     else
+#   #       limites <- c(2.7,5)
+#   #   }
+#   # else {
+#   #   if (lpo > 1) # plusieurs minima, il faut choisir
+#   #     po <- po[which.min(loc$val)]
+#   #   pog <- po-1  # gérer d'éventuelles égalités au minimum
+#   #   while (pog>1 && cr[pog]==cr[po]) pog <- pog-1
+#   #   pod <- po+1
+#   #   while (pod<np && cr[pod]==cr[po]) pod <- pod+1
+#   #   limites <- lp[c(pog,pod)]
+#   #   if (pog >= pod) browser()
+#   # }
+#   out <- optimize(crit_annule_paire,limites,ab,temoins,signe)
+#   resultat <- crit_annule_paire(out$minimum,ab,temoins,signe,as_list=TRUE)
+#   proj <- rep(0,nv)
+#   if (is.null(resultat$proj)) browser()
+#   proj[-c(a,b)] <- resultat$proj
+#   #    browser()
+#   resultat$proj <- proj
+#   resultat$po <- signe * exp(out$minimum)
+# }
+# if (!is.null(N)){
+#   r <- resultat$crit
+#   t <- r/sqrt((1-r*r)/(N-2))
+#   p <- 2*pt(-abs(t),N-2)
+#   if (nt>1)
+#     p <- max(1-(1-p)^nt,1e-15)
+#   resultat$prob <- p
+#   return(resultat)
+# }
 
 
 #   lmt <- matrix(c(-5000,-175,175,5000,-5,-2.7,2.7,5),nrow=2)
