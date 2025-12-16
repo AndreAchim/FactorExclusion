@@ -41,11 +41,11 @@ test_proj <- function(AS,cx,cy,srce=NULL){
   #   pr <- rep(.5,ne*ne1)
   #   P <- .5
   # } else
-  mr <- mean(r)
-  t <- mr*sqrt(dl/(1-mr*mr))
-  P <- 2*pt(-abs(t),dl)                  # CorrAbs
-  P <- 2*pnorm(-abs(mean(qnorm(pr))))
-  # P <- 2*pnorm(-abs(mean(atanh(r))*sqrt((dl-1)))) # ProbTrans
+  mr <- mean(atanh(r))
+  # t <- mr*sqrt(dl/(1-mr*mr))
+  # P <- 2*pt(-abs(t),dl)                  # CorrAbs
+#  P <- 2*pnorm(-abs(mean(qnorm(pr))))
+  P <- 2*pnorm(-abs(mr*sqrt((dl-1)))) # ProbTrans
   #  return(c(CR,r,pr,AS$satur_var))
   # C1x <-  AS$zdat[,cx] - AS$excl_weig[[1]][x]*AS$zdat[,AS$excl_var[1]]
   # C2y <-  AS$zdat[,cy] - AS$excl_weig[[2]][y]*AS$zdat[,AS$excl_var[2]]
@@ -53,5 +53,5 @@ test_proj <- function(AS,cx,cy,srce=NULL){
   # t <- t.test(sc)
   # P <- list(P,t$p.value,t$estimate)
   # if (cx==7 && cy==8 && t$p.value<.05) browser() #print(t$p.value)
-  return(list(CR=CR,r=r,pr=pr,C=mean(CR),R=mean(r),P=P))
+  return(list(CR=CR,r=r,pr=pr,C=mean(CR),R=tanh(mr),P=P))
 }
