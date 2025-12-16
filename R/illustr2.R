@@ -1,0 +1,10 @@
+# log-linear de 2 stat (CorrAvg, CorrTrans) x 3 pairs (v3v10, v4v10, v7v8) x 2 dv (FP, TN)
+AA <- c(312,321,268,277,351,362);
+AA <- c(AA,6000-AA)
+s <- c(1,2,1,2,1,2,1,2,1,2,1,2)
+p <- c(1,1,2,2,3,3,1,1,2,2,3,3)
+d <- c(1,1,1,1,1,1,0,0,0,0,0,0)
+S <- factor(s)
+P <- factor(p)
+D <- factor(d)
+m0p <- glm(AA~S:P+S:D+P:D,family=poisson)

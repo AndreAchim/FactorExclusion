@@ -5,6 +5,7 @@ pair_cancel <- function(p,A_V,probe,as_list=FALSE){
   # Si as_list=TRUE, la sortie est une liste plutôt que juste le critère
   # calcule le contraste A_V %*% c(1,-p) et projette probe sur le contraste normalisé
   # produisant des corrélations
+control = glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e5)))
   # retourne dans $crit la plus grande absolue de ces corrélations
   # le contraste non-normalisé est retourné dans $contrast
   # les projections sur le contraste non-normalisé dans $proj

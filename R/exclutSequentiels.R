@@ -7,7 +7,7 @@ exclutSequentiels <- function(Z, ff) {
     d <- nrow(Z)
     sur <- 1:(d + ff[[1]])
     
-    for (f in 2:(length(ff) - 1)) {  # premier et derniers sous-ensembles jamais en cause
+    for (f in (length(ff) - 1):2) {  # premier et derniers sous-ensembles jamais en cause
       g <- ff[[f]]
       z <- g + d + 1
       for (k in seq_along(g)) {  # tester chaque élément de g (ou de z)

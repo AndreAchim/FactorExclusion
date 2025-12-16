@@ -6,11 +6,33 @@ max_abs <- function(x){
 }
 
 sc1 <- function(x) {
-# porte x à une somme de carrés de 1.0 sauf si tous des 0 dans x
-  if (any(abs(x>1e-10)))
+  # porte x à une somme de carrés de 1.0 sauf si tous des 0 dans x
+  # if (!is.numeric(x)) browser()
+  # if (length(x)<2) browser()
+  flg <- any(abs(x)>1e-10)
+  if (is.na(flg)) browser()
+  if (flg)  
     x <- x / sqrt(sum(x^2))
   return(x)
+}
+
+SC1 <- function(M){
+  MM <- M
+  for (col in 1:ncol(M))
+    MM[,col] <- sc1(M[,col])
+  return(MM)
+}
+
+ortho_norm <- function(M){
+  # orthonormalise les colonnes de M
+  M <- SC1(M)
+  for (k in 2:ncol(M)){
+    co <- lm(M[,k]~0+M[,1:(k-1)])
+    M[,k] <- sc1(co$residuals)
   }
+  return(M)
+}
+
 
 projections <- function(p,G,a,b){
   ctr <- sc1(p*G[a,]-G[b,]) %*% t(G[-c(a,b),])
@@ -20,22 +42,22 @@ projections <- function(p,G,a,b){
 max_proj <- function(p,G,a,b,fct=mamami){
   pro <- projections(p,G,a,b)
   return(fct(pro))
-#  pro <- try(projections(p,G,a,b))
-#  if(isTRUE(class(pro)=="try-error")) { browser() }
-#  return(max(pro * pro))
-#  return(mamami(pro))
-#  return(abs(max(pro)+min(pro)))
+  #  pro <- try(projections(p,G,a,b))
+  #  if(isTRUE(class(pro)=="try-error")) { browser() }
+  #  return(max(pro * pro))
+  #  return(mamami(pro))
+  #  return(abs(max(pro)+min(pro)))
 }
 
 paires_bifactorielles <- function(F,corr_crit=2){
-# retourne toutes les paires de variables de F qui n'impliquent pas un seul facteur de F
-# sauf celles dont le signal corrèle > corr_crit
+  # retourne toutes les paires de variables de F qui n'impliquent pas un seul facteur de F
+  # sauf celles dont le signal corrèle > corr_crit
   nv <- nrow(F)
   nf <- ncol(F)  # planterait si nf==1
   np <- nv
   for (k in 2:nf)
     np <- np + (nv-k)
-#  paires <- matrix(0,np,2)
+  #  paires <- matrix(0,np,2)
   prod_pa <- rep(0,np)
   cor_signal <- rep(0,np)
   p <- 0
@@ -47,7 +69,7 @@ paires_bifactorielles <- function(F,corr_crit=2){
             pa <- nv*k+j
             if (p==0 || !any(prod_pa[1:p]==pa)){
               co <- sc1(F[j,]) %*% sc1(F[k,])
-            if (any((F[j,] * F[k,]) != 0) && co < corr_crit) {
+              if (any((F[j,] * F[k,]) != 0) && co < corr_crit) {
                 p <- p+1
                 prod_pa[p] <- pa
                 cor_signal[p] <- co
@@ -60,13 +82,13 @@ paires_bifactorielles <- function(F,corr_crit=2){
   paires[,3] <- cor_signal[1:p]
   return(paires)
 }
-  
+
 N_pour_contrastes <- function(F,R=NULL,p_crit=c(.25,.05,.001),corr_crit=.95){
-# F(nv,nf) est matrice de patrons, R(nf,nf) les corrélatiosn factorielles
-# lamatrice identité sera substituée si R n'est pas une matrice
-# nf>1 est obligatoire
-# utilisra G <- F %*% sqrtm(R)
-# a et b les rangs des variables du contraste dans F (poids*G[a,]-G([b,]))
+  # F(nv,nf) est matrice de patrons, R(nf,nf) les corrélatiosn factorielles
+  # lamatrice identité sera substituée si R n'est pas une matrice
+  # nf>1 est obligatoire
+  # utilisra G <- F %*% sqrtm(R)
+  # a et b les rangs des variables du contraste dans F (poids*G[a,]-G([b,]))
   if (!is.matrix(F)) stop("F doit être une matrice (nv,nf) avec nf > 1.")
   nv <- nrow(F)
   nf <- ncol(F)

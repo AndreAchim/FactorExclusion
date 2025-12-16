@@ -6,6 +6,8 @@ test_proj <- function(AS,cx,cy,srce=NULL){
   ### ci-dessous, description à actualiser
   # En fait la somme et détermine son rang parmi 1000 cas où la moitié des signes seraient inversés
   # Cela est fait en comparant la somme de sous-ensembles aléatoires avec 0
+  # if (is.null(dim(AS$zdat)))  #
+  #   AS <- cree_zdat(AS)       #
   v_excl <- AS$excl_var
   ne <- length(v_excl)
   x <- which(cx==AS$excl_cibles)
@@ -41,8 +43,15 @@ test_proj <- function(AS,cx,cy,srce=NULL){
   # } else
   mr <- mean(r)
   t <- mr*sqrt(dl/(1-mr*mr))
-  P <- 2*pt(-abs(t),dl)
-  # P <- 2*pnorm(-abs(mean(qnorm(pr))))
+  P <- 2*pt(-abs(t),dl)                  # CorrAbs
+  P <- 2*pnorm(-abs(mean(qnorm(pr))))
+  # P <- 2*pnorm(-abs(mean(atanh(r))*sqrt((dl-1)))) # ProbTrans
   #  return(c(CR,r,pr,AS$satur_var))
+  # C1x <-  AS$zdat[,cx] - AS$excl_weig[[1]][x]*AS$zdat[,AS$excl_var[1]]
+  # C2y <-  AS$zdat[,cy] - AS$excl_weig[[2]][y]*AS$zdat[,AS$excl_var[2]]
+  # sc <- C1x * AS$zdat[,cy] + C2y * AS$zdat[,cx]
+  # t <- t.test(sc)
+  # P <- list(P,t$p.value,t$estimate)
+  # if (cx==7 && cy==8 && t$p.value<.05) browser() #print(t$p.value)
   return(list(CR=CR,r=r,pr=pr,C=mean(CR),R=mean(r),P=P))
 }
