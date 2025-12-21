@@ -1,31 +1,27 @@
 exclusions <- function(AS,ote){
-  AS$excl_var <- as.vector(ote)
-  AS$excl_cibles <- cibl <- setdiff(AS$pertinent,ote)
+  if (!exists("exclusions",AS)) AS$exclusions <- list()
+  out <- colonnesGS(AS,ote)
+  AS$excl_var <- excl <- out$ote
+  AS$excl_cibles <- cibl <- out$cibl
   no <- length(ote)
-  satu <- matrix(NA,nrow=no,ncol=no)
-  for (j in 1:(no-1))
-    for (i in (j+1):no){
-      sat <- asSatPaire(AS,ote[sort(c(i,j))])
-      satu[i,j] <- sat[1]
-      satu[j,i] <- sat[2]
-    }
-  AS$satur_var <- sat <- rowSums(satu,na.rm=TRUE)/(no-1)
+  if (ote[1] <= AS$nv) {
+    satu <- matrix(NA,nrow=no,ncol=no)
+    for (j in 1:(no-1))
+      for (i in (j+1):no){
+        sat <- asSatPaire(AS,ote[sort(c(i,j))])
+        satu[i,j] <- sat[1]
+        satu[j,i] <- sat[2]
+      }
+    AS$satur_var <- sat <- rowSums(satu,na.rm=TRUE)/(no-1)
+  }
   con <- array(NA,dim=c(AS$nv,AS$nv-no,no))
   cor <- array(NA,dim=c(length(cibl),no-1,no))
-  n_o <- no:1
-  for (j in length(cibl):1){
-    out <- exclusion(AS,c(cibl[j],ote))
-    for (k in n_o){
-      AS$excl_weig[[k]][j] <- out[[k]]$po
-      AS$excl_crit[[k]][j] <- out[[k]]$crit 
-      con[,j,k] <- out[[k]]$contrast
-      cor[j,,k] <- out[[k]]$corr
-    }
-  }
-#  browser()
-  for (k in n_o){
-    AS$excl_cont[[k]] <- con[,,k]
-    AS$excl_corr[[k]] <- cor[,,k]
+  for (j in 1:length(cibl)){
+    # nm1 <- noms[cibl[j]]
+    covar <- covariables(AS,excl,cibl[j]) # seulement cov qui ne partagent pas de bruit
+    # for (k in 1:no){
+    #   nm <- paste0(nm1,noms[covar[k]])
+  AS <- exclusion(AS,c(cibl[j],covar))
   }
   return(AS)
 }
