@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Achim
+    given-names: André
+    affiliation: Université du Québec à Montréal (UQAM)
+title: FactorExclusion
+version: 0.1.0
+doi: 10.5281/zenodo.22319448
+date-released: "2026-09-05"
+url: "https://github.com/AndreAchim/FactorExclusion"
+license: GPL-3.0
+abstract: >
+  Package R implémentant la méthode d'exclusion de facteur (FE) dans le
+  cadre de l'analyse par annulation de signal (Signal Cancellation Analysis).
+  Fournit des outils pour estimer les saturations factorielles à partir de
+  paires d'ancres, calculer les corrélations résiduelles et simuler les
+  taux de faux positifs.

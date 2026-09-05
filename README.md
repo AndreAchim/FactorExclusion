@@ -1,5 +1,7 @@
 # FactorExclusion
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22319448.svg)](https://doi.org/10.5281/zenodo.22319448)
+
 **FactorExclusion** est un package R implémentant la méthode d'exclusion de facteur (FE) 
 dans le cadre de l'analyse par annulation de signal (Signal Cancellation Analysis, SCA).
 
@@ -43,6 +45,18 @@ efg <- FE_tests()
 source(system.file("scripts/fig_biais.R",           package = "FactorExclusion"))
 source(system.file("scripts/build_detection_data.R", package = "FactorExclusion"))
 source(system.file("scripts/fig_detection.R",        package = "FactorExclusion"))
+```
+
+## Citation
+
+```bibtex
+@software{achim_2026_factorexclusion,
+  author  = {Achim, André},
+  title   = {FactorExclusion},
+  year    = {2026},
+  doi     = {10.5281/zenodo.22319448},
+  url     = {https://github.com/AndreAchim/FactorExclusion}
+}
 ```
 
 ## Auteur
