@@ -1,6 +1,6 @@
-# FactorEclusion
+# FactorExclusion
 
-**FactorEclusion** est un package R implémentant la méthode d'exclusion de facteur (FE) 
+**FactorExclusion** est un package R implémentant la méthode d'exclusion de facteur (FE) 
 dans le cadre de l'analyse par annulation de signal (Signal Cancellation Analysis, SCA).
 
 ## Fonctionnalités principales
@@ -14,7 +14,7 @@ dans le cadre de l'analyse par annulation de signal (Signal Cancellation Analysi
 
 ```r
 # Via devtools (une fois le dépôt GitHub créé) :
-devtools::install_github("quantmeth/FactorEclusion")
+devtools::install_github("AndreAchim/FactorExclusion")
 ```
 
 ## Utilisation typique
@@ -41,9 +41,9 @@ Les scripts de reproduction des figures de l'article sont dans `inst/scripts/` :
 ```r
 # Exemple de reproduction complète
 efg <- FE_tests()                                  # génère efg global
-source(system.file("scripts/fig_biais.R",          package = "FactorEclusion"))
-source(system.file("scripts/build_detection_data.R", package = "FactorEclusion"))
-source(system.file("scripts/fig_detection.R",      package = "FactorEclusion"))
+source(system.file("scripts/fig_biais.R",          package = "FactorExclusion"))
+source(system.file("scripts/build_detection_data.R", package = "FactorExclusion"))
+source(system.file("scripts/fig_detection.R",      package = "FactorExclusion"))
 ```
 
 ## Auteurs
