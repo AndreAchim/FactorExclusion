@@ -1,10 +1,17 @@
 # License
 
-This work is licensed under the
-[Creative Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+**FactorExclusion** is free software: you can redistribute it and/or modify it
+under the terms of the **GNU General Public License** as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
 
-You are free to share and adapt this material for any purpose, provided that
-appropriate credit is given to the original authors:
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-- André Achim (UQAM)
-- P.-O. Caron (TÉLUQ)
+A copy of the GNU General Public License is available at
+<https://www.gnu.org/licenses/gpl-3.0.html>.
+
+## Copyright
+
+Copyright © 2026 André Achim (UQAM) & P.-O. Caron (TÉLUQ)

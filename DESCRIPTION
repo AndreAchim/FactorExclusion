@@ -11,7 +11,7 @@ Description: Implements the Factor Exclusion (FE) method for signal cancellation
     analysis. Provides tools to estimate factor loadings from anchor pairs,
     compute residual correlations, simulate false-positive rates, and assess
     the effect of anchor saturation on detection power.
-License: CC BY 4.0
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
