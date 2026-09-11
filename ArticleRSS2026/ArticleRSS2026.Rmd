@@ -1,0 +1,724 @@
+---
+title: "Challenging unifactorial status in CFA measurement models"
+short_title: "Correlation testing after factor exclusion"
+short_author: "A. Achim"
+authors: 
+- name: "André Achim"
+  affiliation: "Université du Québec à Montréal"
+  city: "Montréal"
+  country: "Canada"
+  email: "achim.andre\\@uqam.ca"
+  address: "Département de Psychologie, C.P. 8888, succursale Centre-ville, Montréal (Québec) H3C 3P8"
+  ORCID: "0000-0003-2159-6010"
+abstract: |
+  Confirmatory factor analysis (CFA) adjusts the coefficients of a hypothesised factor model to optimally fit the data. The initial measurement model often assigns most variables to only one of the common factors. With sufficient power, missing cross-factor links should result in a significant $\chi^2$ fit index, accompanied by suggestions for improving the fit. *Residual correlation* is introduced to detect correlations outside a factor direction, either ahead of CFA optimization or to support suggested additional links beyond mere statistical acceptability. The factor is specified from two variables initially documented exclusive to a common factor. A remarkable property of such factor exclusive variables allows extracting from the correlation matrix the projections of all remaining variables on that factor. These allow excluding the factor contributions from all correlations, leaving residual correlations. Variables exclusively informed by the target factor behave as noise with no significant residual correlation. Any variable assigned to the target factor but having a significant residual correlations with indicators of other factors cannot be assumed unifactorial. After simulations document the statistical behaviour of residual correlation testing, a real-data textbook example illustrates that not one, but two of the Verbal IQ indicators are further informed by the Performance IQ factor.
+keywords: Conformatory factor analysis; Factor exclusion; Measurement model; Residual correlation; Signal cancellation
+# bibliography: bibliography.bib
+header-includes:
+  - \usepackage[utf8]{inputenc}
+  - \usepackage[T1]{fontenc}
+  - \lstset{basicstyle=\small\ttfamily, breaklines=false}
+  - \usepackage{float}
+  - \usepackage{setspace}
+  - \doublespacing
+  - \geometry{a4paper}
+  - \renewcommand{\maketitle}{}
+
+output:
+  rticles::rss_article:
+    latex_engine: pdflatex
+    includes:
+      in_header: fix_abstract.tex
+---
+
+# Introduction
+
+The common factor model for $n_f$ factors expressed in $n_v$ noisy variables
+acknowledges that $n_f+n_v$ sources of information are expressed in only $n_v$
+directly accessible dimensions. Confirmatory factor analysis (CFA) aims at
+isolating the $n_f$ factors from the $n_v$ sources of unique variance based on
+a postulated factor model. These models frequently assign variables to only one
+of the postulated factors. Even with the correct number of factors, the model
+may err by missing cross-factor links, resulting in rejecting the compatibility
+of the data with the factor model, expressed as a significant $\chi^2$ fit
+index. Most CFA software will suggest model modifications to improve the fit.
+Parsimony dictates adding no more links than necessary to make the model
+statistically acceptable. A real data textbook example will illustrate that the
+method introduced here may provide information to justify adding links beyond
+bringing the model to non-significance.
+
+Alternately, rather than adding links post initial CFA optimisation, it is
+possible to pretest whether cross-factor links are missing. Both contexts
+involve excluding a factor direction from all variables and testing whether
+each variable thought exclusively informed by that factor indeed behaves as
+noise outside this direction. The definition of noise orthogonality requires
+that the factor direction be outside the subspace of the *nv* sources of unique
+variance, which partial correlation cannot achieve by linearly combining noisy
+variables. Such combinations are correct for prediction but not for inferential
+purposes unless an independent variable expresses the factor without
+measurement error. The present factor exclusion approach rather relies on the
+common signal of a pair of noisy variables each exclusive to the same factor.
+
+If two variables are exclusive to the same factor, their respective signal parts
+have the direction of this factor while the variables themselves define two different 
+directions due to the contribution of their unique sources of
+variance. The shared direction of their
+signal implies that one variable may be weighted to make its
+signal vector identical to that of the other and subtracted from the latter
+forming a contrast with no signal, consisting only in a weighted sum of their
+respective noise components. The suitable signal cancellation weight is the
+value that makes the contrast uncorrelated with any other variable. Successful
+signal cancellation between two variables allows using them to designate 
+their common factor to test for shared information outside its direction. 
+The statistics is designated *residual correlation*.
+
+# Residual Correlation Principles
+
+Besides the usual power considerations, the residual correlation approach only
+requires that the target factor can be designated by a pair of variables, say
+*A* and *B*, that are exclusive to it except for their respective unique
+sources of variance. Their exclusiveness to the same common factor implies that
+a constant weight *w* exists such that the contrast *A-wB* cancels their
+signal. Such contrast then exclusively consists of their combined unique
+sources of variance, void of common factor information. Computationally, the
+suitable weight *w* minimises the multiple regression of the *A-wB* contrast on
+all remaining variables. The resulting $R^2$ must be clearly not significant to
+validate that the contrast consists of noise only, i.e. that the contrast
+successfully cancelled the signal from the only common factor informing *A* and
+*B*. For other pairs of variables, including *A* with *X* and *B* with *X*, a
+still significant minimised $R^2$ indicates failure of signal cancellation,
+meaning that the variables contrasted express at least two factors, their
+respective signal parts not being aligned on a single common factor.
+
+Respectively labelling *a* and *b* the factor loadings of *A* and *B*, the
+optimal weight *w* must correspond to $a/b$, where the denominator re-scales
+*B*'s signal to unit length, which the numerator then matches to *A*'s signal
+length for signal cancellation. Following successful signal cancellation, the
+two loadings are easily estimated since *w* is the ratio of *a* and *b* while
+$\rc{AB}$ is their product. Solving these two theoretical equalities yields $a^2
+= \rc{AB}w$ and $b^2 = \rc{AB}/w$, leaving only the signs of *a* and *b* to be
+attributed.
+```{r}
+
+```
+
+For the present purpose, it suffices to use $\rc{AB}$ as the product of *a* and
+*b*. The projection of each remaining variable on their common factor is
+extracted from its correlations with each of *A* and *B*. Labelling $x_1$ the
+projection of a generic variable *X* on that factor, the expected correlations
+$\rc{AX}$ and $\rc{BX}$ must be $ax_1$ and $bx_1$ respectively since *A* and *B*
+load zero on all remaining common factors. It is then readily seen that $x_1^2$
+is $\rc{AX} \rc{BX}/\rc{AB}$, which may also be written as $(ax_1)(bx_1)/(ab)$
+that decomposes as $(ab)x_1^2/(ab)$. The sign of $x_1$ is then set consistent
+with the observed correlations involved.
+
+The residual correlation of any pair of variables, i.e. the contribution to
+correlation outside the target factor direction, is then obtained by
+subtracting from their full correlation the product of their loadings on the
+target factor direction. Indeed, all correlations being sums of coordinate
+products over any convenient orthogonal basis, the subtraction partitions such
+sum of products into the product of the estimated loadings on the designated
+factor direction and a residual sum of products.
+
+The resulting residual correlation is tested as the difference between the
+original correlation and its single factor estimate, each subjected to Fisher's
+$z_r$ transformation (atanh). The difference is $D=z(\rc{XY} )-z({xy})$, where
+*x* and *y* are the projections of variables *X* and *Y* on the excluded
+factor, with their product *xy* calculated as $\sqrt{\rc{AX}\rc{BX}\rc{AY}\rc{BY}}
+/\rc{AB}$. The contrast *D*, expected null when the designated factor is the
+only common contributor to *X* and *Y*, is thus a function of six correlated
+correlations. The asymptotic covariance matrix of the six sample correlations
+is obtained from the Pearson-Filon formula (Steiger, 1980). The gradient of *D*
+with respect to these six correlations — which incorporates the derivatives of
+the atanh transformation — is then used to propagate their joint sampling
+variability into the variance of *D* via the delta method: $\text{Var}(D) =
+\mathbf{g}^\top \Sigma \mathbf{g}$. The test statistics divides *D* by its
+standard error, referring the result to the normal distribution to reflect that
+$Var(D)$ is derived asymptotically.
+
+# Simulation Study
+
+## Methods
+
+The main aim of the simulation study is to document compliance with the nominal
+false positive error rate. It is secondarily to document eventual bias by
+comparing the estimated residual correlations to those expected from the
+population parameters. More specific to the new method, the third aim is to
+document how the correlation between the factor indicator variables (FIVs)
+interacts with the residual correlation effect size. To document these three aspects, the study design varies 
+sample size and FIV loadings over a range of expected
+residual correlations.
+
+Since residual correlation concerns relationships among four variables, namely
+the tested pair of dependent variables and the two FIVs, a single factor
+structure may assess a variety of conditions. Besides incorporating a range of
+effect sizes, the design implements three types of expected null residual
+correlations. First, one of the two dependent variables may consist exclusively
+of noise outside the excluded factor. Next, pairs of bifactorial dependent
+variables may be informed by the target factor and by a different second
+factor. Finally, a pair of dependent variables may have loadings forming a null
+sum of products outside the excluded direction. 
+
+A three-factor structure was designed to embed the three types of null
+expected residual correlations besides forming a range of effect sizes. Within
+it, three variables load exclusively on the factor to be excluded. The first
+two of these, serving as FIV, are given loadings that vary across runs from
+(.4, .5) to (.8, .9) by steps of (.1, .1). The third variable that loads
+exclusively on the target factor has expected null residual correlations with
+all remaining variables. The remaining variables form pairs that either exemplify the
+other two types of null expected residual correlations or have expected
+residual correlations in the range .05 to .34.
+
+Three factors were originally defined to correlate .4 between $F_1$ and $F_2$,
+.5 between $F_1$ and $F_3$, and .6 between $F_2$ and $F_3$. Since factor
+exclusion is the removal of projections on the direction of a target factor, it
+was convenient the express the factor space on orthogonal axes through the
+Cholesky decomposition of the factor correlation matrix. This keeps the target
+factor direction as the first axis and makes the sums of pairwise
+cross-products loadings over the last two axes the expected residual
+correlations. The test factor structure, finalised by rounding all loadings to
+two decimal places, is presented in Table~\ref{tab:structure}. All variables
+have a communality below .9. The 11 dependent variables $v_3$ to $v_{14}$
+provide 66 residual correlation estimates, 20 of which are expected null.
+
+No correction for the number of
+tests is applied considering that this would make the statistical results of
+any combination of parameters contingent on the current context rather that to
+document specific combinations that could occur with actual data. Nonetheless,
+the default .05 $\alpha$ level is replaced by a 99% confidence interval for
+each estimation of false positive rates.
+
+With each set of FIV loadings, sample size was set at 125, 500 or 2000, where
+this number also served to initialise the pseudo-random number generator. This
+ensured identical data for all variables other than the FIVs at any given
+sample size. For each of these 15 combinations of parameters, a minimum of 1000
+data sets were used, replacing those in which the FIV failed the imposed
+requirement that they correlate significantly at the .05 level, which occurred
+mostly for $N=125$ with the expected correlation of .20 and, occasionally, with
+the expected correlation of .30.
+
+Out of the 1000 data sets subjected to residual correlation analysis, a few
+could involve an assessed loading above unity (Heywood case), again occurring
+essentially with the lowest FIV loadings and the smallest sample size. The
+warning to this effect was disabled for the simulations. This would normally
+lead a user to ignore the results or to exclude the variable that received a
+loading above unity. The information being only available after residual
+correlation analysis, these rare improper data sets were not replaced but
+ignored in calculating the proportion of significant residual correlations.
+
+## Results
+
+### False Positive Rates
+The upper limit of the 99% confidence interval for 1000 tests performed at the
+.05 level is 6.8%. The method was seen to respect the nominal false positive
+rate except in the hardest conditions. Across the 20 pairs of variables with
+expected null residual correlations, the false positives ranged from 3.2% to
+6.8% (with one exception at 7.1% that became 5.1% upon an independent
+replication) in all conditions but the first one with the smallest sample size
+and the smallest FIV loadings.
+
+With FIV loadings of (.4, .5) along with $N=125$, nine excessive rates were
+seen, although all below 10%. These occurred with all three types producing null residual correlations. Of the 11 type-1 pairs involving $v_3$
+(exclusively informed by the excluded factor), those formed with $v_4$, $v_9$,
+$v_{10}$, and $v_{14}$ respectively showed 7.6%, 9.0%, 7.9%, and 7.6% false
+positives. Three of the six type-2 pairs informed by different factors outside
+the excluded one gave excess false positives. These are the crossings of $v_4$
+with $v_7$ or $v_8$ and the crossing of $v_6$ with $v_7$ that respectively gave
+8.6%, 7.7% and 7.9% false positives. Finally, for type-3, $v_{13}$ gave 9.2% false
+positives when crossed with either $v_9$ or $v_{14}$ (but only 4.0% crossed
+with $v_{12}$).
+
+An independent replication with these smallest FIV correlation and sample size
+suggested much variability in exceeding or not 7% false positives. The
+$v_6-v_7$ pair shifted from 7.9% to 6.4% while three other pairs shifted upward
+from 5.4% to 8.5%, from 6.2% to 8.2%, and from 6.8% to 7.6%.
+
+### Residual Correlations Values
+The black line in Figure~\ref{fig_1} represents the 46 population residual
+correlations placed in increasing order. Equal expected values are ordered in
+increasing order of overall observed values. The white lines are the means
+estimates over the 1000 or so data sets (i.e. excluding the occasional ones
+with a Heywood case) of each condition. The grey ribbon represents one standard
+deviation from the mean. Given the large number of independent estimates, the standard error
+of the mean is quite small. The mean estimates whose 99.9% confidence interval
+does not include the expected value are marked by a pale grey vertical bar with
+its centre on the observed mean. All computations were carried on Fisher
+*atanh* transformed values but are painted back-transformed to the original
+scale. Two negative residual correlations, at -.12 and -.18, are sign-reversed
+for clarity.
+
+The expected value is always seen within one standard deviation of the near
+1000 datasets of each condition. The largest sample size and largest loadings
+on the two variables designating the excluded factor indicate excellent
+asymptotic recovery of the population residual correlations.
+
+### Effect of Indicator Variable Loadings on Detection Power.
+Although there is no
+doubt that detection power depends on effect and sample sizes, the contribution
+of the FIV signal level remains to document. Due to the resetting of the
+pseudo-random number generator to sample size, the simulated data were strictly
+paired within sample size. While the FIV loading levels could be compared
+pairwise by McNemar's method or collectively by Cochran's Q test separately for
+each sample size and each of the 46 pairs of dependent variables or on their
+totals, their GLM extension, namely the conditional logistic regression
+(Therneau & Grambsch, 2000; 'clogit' function of the survival R package,
+Therneau, 2026) allows testing the effect of FIV loading levels across the
+three sample sizes and the 46 expected residual correlations through its
+proportional hazard approach. To preserve strict data pairing, whenever a data
+set was disregarded as having produced a Heywood case, all five parallel data
+set within the sample size were excluded. Complete datasets over all five FIV
+loading levels were thus 930, 964 and 1000 for increasing sample sizes.
+
+The initial model consisted in the logarithms of the design variables (expected
+residual correlation and sample size). The complete model added FIV loading
+(categorical) and its interactions. The fit improvement gave
+$\chi^2(11)=55216$. This decomposes into the main effect of FIV loadings
+($\chi^2(3)=41081$), and its interactions ($\chi^2(8)=14135$), all three tests
+significant beyond 1e-15. All parameters indicated increased detection with
+increasing FIV loadings, with increasing effect size and with increasing sample size. Figure~\ref{fig_2} depicts all detection rates along with the logistic curves 
+adjusted by the GLM quasibinomial procedure. The detection rates are depicted by symbols corresponding to the FIV loading condition. Multiple points occur at equal effect sizes.
+
+### Discussion
+The present simulated data covered a wide range of four-variable conditions
+(two FIVs and two dependent variables) crossed with five population FIV
+correlations ranging from .20 to .72 and with 66 residual correlations from 0
+to .34. Besides the expected beneficial effect of increased sample size, all
+three characteristics inspected clearly stress the importance of using FIVs
+that correlate highly when a choice is available. The nominal false positive
+rate was respected in all combinations of test parameters but that with FIV
+loadings of (.4, .5) along with sample size of 125. Similarly, variability of
+residual correlation estimates about the corresponding population values
+decreases markedly with increasing FIV loading while correct detection also
+improved markedly. Finally, the residual correlation estimates were confirmed
+to approach the corresponding population values as FIV loadings and sample size
+increased, with no notable differences across the range of residual correlation
+effect sizes.
+
+# Application to Real Data
+
+## Data
+
+The above simulations were carried out with the FIVs already designated.
+Important application details are worth adding through describing the residual
+correlation analysis of a real data set. This will be done with data from
+Ullman's (1996) chapter on Structural Equation Modelling (SEM) introduced in
+the third edition of Tabachnick & Fidell textbook. She uses selected Wechsler
+data from 175 learning disabled children. Eleven variables were extracted from
+the WISC, the first six of which are initially taken as exclusive indicators of
+Verbal IQ and the last five of Performance IQ. These are *a*: Information, *b*:
+Comprehension, *c*: Arithmetic, *d*: Similarities, *e*: Vocabulary, *f*: Digit
+span, *g*: Picture completion, *h*: Picture arrangement, *i*: Block design,
+*j*: Object arrangement, and *k*: Coding. This initial model not being consistent
+with the data ($\chi^2(43)=70.2, p=.0054$), the suggestion from LISREL-7
+(Jöreskog & Sörbom, 1988) was accepted to add a cross-link from the Performance
+factor to Comprehension, which yielded $\chi^2(42)=60.3, p=.033$. The further
+removal of Coding, whose link from Performance was not significant, gave the
+final model with $\chi^2(33)=45.0, p=.08$.
+
+## FIV Selection
+
+The R code to apply residual correlation analysis is available on GitHub. The
+procedure consists in the following steps: (1) preprocess the data, (2) select
+suitable FIVs, and (3) call the analysis.
+
+Application of residual correlation analysis starts by subjecting the data to a
+function called 'init_SCA'. The data could be a rectangular matrix with cases as
+rows and variables as columns, or alternately a covariance or correlation
+matrix along with sample size. For this example, the covariance matrix was
+obtained from 'tf <- TFcovar(.R))' (see Listing \ref{lst:roundtbl}). The init_SCA function operates on the
+correlation matrix, attempting signal cancellation on each pair of variables.
+It returns a list, here named TF, with many elements, including the sequence of
+tested pairs, the significance of their correlations, their optimised
+cancellation weights and the associates $R^2$ probabilities. An ad hoc function
+'roundTbl' is convenient to examine these results to help choosing suitable
+FIVs. It prints a square matrix with cancellation $R^2$ probabilities above the
+diagonal and, below, the weights of the optimised
+contrast (applied to the highest ranked
+variable before subtracting the lower ranked one from it, e.g. *-B+wX*). From this output, one can note that
+the weights in the last row (the Coding scale) are markedly larger than all the
+ones above. This is the signature of an orphan variable that is barely informed
+by common factors. A perfectly independent variable already does not correlate with any remaining one. Signal cancellation optimisation then just accommodates random correlations.
+Consistent with Coding having no correlation significant
+at $p<.01$, this variable is excluded from further consideration.
+ 
+Selection of FIVs for each factor starts by inspecting the table annotated by
+roundTbl which adds a * after significant probabilities (default: seuil=.05) or
+a = after probabilities above the threshold value expressed in negative (here
+seuil=-.2). The latter flags the confident signal cancellations, i.e. contrasts
+which multiple regression on all remaining variables could not explain, with a
+security margin. FIV selection also considers the correlation matrix, given the
+documented value of highly correlated FIVs.
+
+Given the initial measurement model, the pair of exclusive Verbal factor
+indicators should be selected among the first six variables. Comprehension and
+Arithmetic (*b* and *c*) as well as Arithmetic and Similarities (*c* and *d*)
+could not cancel their signal ($p=.009$ and $p=.033$). This means that at least
+one of them is also informed by another common factor, which is not necessarily
+Arithmetic. That Comprehension (*b*) cancelled signal with Similarities (*d*)
+($p=.412$) requires that these two scales are well aligned with the signal
+space origin. While exclusivity to a common factor achieves this alignment, so
+can proportional loadings on a pair of factors. Thus, if Comprehension were to
+be declared bifactorial, so should Similarities, a conclusion reinforced by
+both these variables poorly cancelling the signal of the remaining four Verbal
+intelligence variables. The doubt on the unifactorial nature of these three
+variables leaves the remaining three Verbal variables to choose from as
+indicators of this factor. Among these, the highest correlation observed is
+.625 between Information and Vocabulary. These are retained as FIVs for the
+Verbal IQ factor.
+
+The four indicator variables of Performance allow six pairwise signal
+cancellation among them. These show no counterindication (i.e. no significant
+$R^2$) to their presumed FIV status, although four $R^2$ probabilities are
+barely above the arbitrarily defined bar of .20. The remaining two are .717 and
+.266 for signal cancellation of Block design (*i*) with Picture completion
+(*g*) and with Object arrangement (*j*). This designates Block design as one
+FIV. A higher non-significant probability (e.g., .717 vs .266), provided both are deemed reliable, does
+not mean better signal cancellation. Since the simulations emphasised the
+importance of high FIV loadings, preference for the second FIV is given to
+Object arrangement that correlates with Block design .399 compared to .363 for
+Picture completion.
+
+## Results
+
+Application of partitionne_R to the list produced by init_SCA is followed by
+printing the main results with roundTbl using a threshold corrected for multiple tests (discussed below). Of the four initial
+Verbal indicator other than the FIVs, *c* and *f* (Arithmetic and Digit span) have
+no detectable signal outside the FIV signal direction. The other two variables,
+*b* and *d* (Comprehension and Similarities) have no signal on the excluded
+Verbal factor direction, but each has significant residual correlations on
+three of the four indicators of the Performance factor (Coding being ignored).
+With the Verbal factor direction excluded, all residual correlations among the
+Performance indicators remain significant. Exclusion of the latter factor made
+its remaining two variables behave as noise only while all Verbal indicators
+still correlated significantly.
+ 
+## Discussion
+
+Partitioning the correlations among the ten retained variables gave two clear
+indications that Comprehension and Similarities (*b* and *d*) are bifactorial.
+First, the pattern of pairwise signal cancelation showed clear signal
+cancellation success between these two variables but significant or nearly so
+$R^2$ probabilities for signal cancellation of each with the remaining four
+Verbal indicators. Second, the residual correlations showed that while the
+removal of the Verbal factor direction from these two variables cancelled their
+signal from the Verbal factor, they retained residual correlations with indicators
+of the Performance factor.
+
+While the textbook final solution acceptably fit the data when only
+Comprehension was informed by both factors, with $\chi^2(33)=45.0, p=.08$, the
+present factor exclusion strongly suggests that both Comprehension and
+Similarities are bifactorial. Submitting this to lavaan (Rosseel, 2012) gave
+$\chi^2(32)=37.7, p=.23$. The fit difference due to further acknowledging
+Similarities as bifactorial is $\chi^2(1)=7.3, p=.007$. It is likely that the
+extra link was also suggested by LISREL to further improve the already
+statistically acceptable model, but parsimony would have argued against
+incorporating it in the model. Had partitionne_R been available but not used
+ahead of SEM, it could have provided useful information to decide if the
+suggested extra link was necessary or simply opportunistic.
+
+Having excluded Coding as unreliable, 28 residual correlations are tested for
+each factor exclusion. Correcting for that many tests would, however, be
+inappropriate since excluding the direction of one factor cannot be expected to
+cancel shared information from the remaining factors. Residual correlations
+among the variables exclusive to the other factor may only be reduced from
+their original full signal space values due to factor correlations. 
+
+Here, each
+variable initially suspected of being exclusive to a given factor is of
+separated interest. Even if it is bifactorial, its residual correlations with
+the other variables of the same factor are expected null unless any of them is
+also bifactorial. Three choices are relevant. Controlling for all residual
+correlations of a tested variable is simple but conservative in the presence of other
+variables exclusive to the excluded factor, which behave as noise. Excluding
+these factor-exclusive variables, here *c* and *f* but not *b* and *d*, from the correction would be delicate and
+possibly circular. The currently recommended correction is for the number of
+residual correlations with variables associated with other factors. Using the
+Bonferroni correction, for instance, would divide the nominal $\alpha$ level by
+four for each Verbal variable outside this factor direction, and likewise by 6 for exclusion of the Performance factor direction.
+Exclusion of the latter factor already had all six uncorrected probabilities
+above .1, but a correction should apply for each variable of the Verbal factor.
+The residual correlations of each with the four variables of the Performance
+factor should be tested at .0125. 
+
+Arithmetic (*c*) and Digit span (*f*) had
+their smallest uncorrected probability above .09. That of Comprehension (*b*)
+is .002 with the next one at .006. Similarities (*d*) is barely significant at .011. 
+Disregarding the small values of two of the remaining three 
+residual correlations probabilities, at .014 and .072, someone could argue that the test of its residual correlation with Comprehension should also have been counted, bringing the statistical threshold to .01,
+and prefer risking missing the extra link. This requires discussing what would be the meaning of only this test being significant while all four residual correlations with variables from the other factor being clearly not significant. This would be the signature of a supplementary doublet factor expressed exclusively in *b* and *d*, hardly a parsimonious solution. This would further require discounting all significant zero-order correlations of Similarities with the Performance variables as exclusively due to correlations among factors. To exclude that a variable expresses both factors in the model, correcting for the number of variables of alternate factor(s) is recommended. The present interpretation is that both variables are very likely bifactorial.
+
+# General Discussion
+
+Pairwise signal cancellation allows testing the hypothesis that the signal parts
+of two variables lie in the direction of the same factor. When this
+same-direction property holds, their signal lengths may be equated and then
+subtracted to cancel this signal direction forming a contrast consisting
+exclusively of their combined noise which is expected orthogonal to any other
+variable. The suitable contrast weight is obtained by minimising the multiple
+regression of the contrast on all remaining variables. For safety, it is
+suggested to accept successful signal cancellation only if the minimised $R^2$
+has a probability above .20, although probabilities below .05 may be taken as
+evidence that the two variables have their respective signal in a plane rather
+than on a common direction.
+
+Factor indicator variables, or FIVs, are pairs of variables initially suspected
+exclusive to the same common factor and confirmed so by their successful signal
+cancellation. A simple algebraic formula allows assessing the projection on
+that factor of any other variable from its correlations with the two FIVs. The
+hypothesis that two variables only share information from this common factor
+implies that the product of their projections on the designated factor equates
+their observed correlation except for accidental noise effects.
+
+The difference between a correlation and the corresponding projection product
+is designated a residual correlation. A suitable test of this difference
+assesses the presence of shared common factor information outside the direction of the target
+factor. While classical partial correlation assesses the correlation of two variables
+within the variable space by excluding from each an optimal combination of
+noisy variables, residual correlation selectively excludes the direction of a
+factor suitably separated from the noise sources affecting the involved
+variables. Partial correlation could not serve the present purpose of
+validating that a pair of variables are exclusively informed by the same common
+factor without error-free measurement of an independent variable
+exclusive to the target factor, the violation of which is known to yield
+inflated type I error rates (Brewer, Campbell & Crano, 1970; Brunner & Austin,
+2009; Shear & Zumbo, 2013). Indeed, unreported partial correlations applied to
+the simulated data, using the FIVs as independent variables, showed nearly 100%
+false positives at N=2000. This not only reflects underestimation of the signal
+contents of the correlated variables, but also injection into each of noise
+from the independent variables.
+
+The simulations documented the reliability of the test of residual correlations
+in respecting the nominal false positive rate, except for some small excess
+only with the smallest population FIV correlation of .20 along with the smallest sample size of
+125, for which 633 extra data sets were required to produce 1000 for which the FIVs correlated significantly at the .05 level. They further documented that the assessed residual correlations
+approximate well their expected values, with reducing variability as the
+expected FIV correlation or the sample size increase.
+
+Since a significant residual correlation negates that two variables are
+exlcusive to the same factor, it may be used ahead of SEM to confirm which
+variables are exclusive to a factor. This was exemplified using a textbook
+dataset that illustrated SEM with fit improvement. The residual correlation
+approach contradicted its final accepted solution by documenting that not just
+one but two of the variables initially hypothesised exclusive to Verbal
+intelligence are further informed by the Performance IQ factor.
+
+The common-factor model conceptualises $n_f$ common factors informing $n_v$
+variables beyond their $n_v$ source of unique variance. Because $n_f+n_v$
+independent directions are expressed in only $n_v$ observables, any combination
+of noisy variables meant as a factor remains within the variable space and
+retains some noise. This does not prevent, say, exploratory factor analysis to
+be useful but SEM further aims at recovering the missing $n_f$ dimensions,
+separate from the $n_v$ unicities. Residual correlation similarly recovers
+missing factor dimensions uncontaminated by combined sources of unique
+variance, one factor at the time This is however limited to dimensions
+expressed in at least two exclusive variables attested so by signal
+cancellation.
+
+Because factor exclusion projects all variables on the factor direction, the
+effect of correlated factors is to reduce shared variance outside the excluded
+direction. This was exemplified in the simulated data, where the pattern matrix
+of correlated factor was expressed by a Cholesky decomposition placing the
+target factor as the first axis with the residual loadings on correlated
+factors on subsequent orthogonal axes.
+
+A final point concerns the apparent relationship of tetrad differences
+(Spearman & Holzinger, 1924, 1925) to the current assessment of projections on
+a target factor. Both approaches combine observed correlations, whose expected
+values are the sums of loading products over the orthogonal space of all common
+factors. They also have in common to corroborate the single common factor
+hypothesis by a non-significant statistic. But while the tetrad differences are
+built to have null expected values over all subsets of four variables to
+document that all correlations are due to a single common factor, this single
+factor assumption is here only required for a pair of variables, the FIVs,
+exclusive to each common factor of interest. This FIV assumption is directly
+challenged by signal cancellation, which requires that the multiple regression
+$R^2$ of their optimised contrast with the remaining variables is acceptably
+null, for which a probability threshold of .2 is suggested. The similarity is
+not as close as may seem at first sight.
+
+## Significance
+
+The proposed application of factor exclusion is to help decide which variables
+are unifactorial. The main significance of the work reported here, however, is
+the introduction of signal cancellation to isolate individual factors from the
+unique sources of variance. Although SEM may already achieve this based on user
+knowledge of the domain, the signal cancellation approach holds promise for
+blind recovery of sparse factor structures, i.e. to recuperate without user
+guidance each required factor loading and each required factor correlation
+provided that each factor has at least two exclusive indicator variables
+(Achim, 2024). The signal cancellation criterion used in this 2024 report
+ relied on an unwarranted assumption, which following work corrected. Ongoing
+work seeks to apply signal cancellation to also explain the signal of variables
+contributed by factors without the required two FIVs. The direction of such
+extra factors lacks adequate constraint for unambiguous relationships with the other factors but may be represented by the signal
+direction of a representative variable.
+
+# Data Availability Statement
+
+The functions used, including code for the two figures, are available in the FactorExclusion package
+(https://github.com/AndreAchim/FactorExclusion; DOI: 10.5281/zenodo.22319448),
+which should eventually be incorporated into the SignalCancellation package
+maintained by P.-O. Caron (Université TÉLUQ) on GitHub
+(https://github.com/quantmeth/SignalCancellation). When completed, this package should be ported to CRAN. 
+
+The simulation data may be reproduced in R by "out <- FE_tests()".
+Function 'TFcovar' returns the WISC covariance matrix from Tabachnick & Fidell's textbook along with sample size.
+
+
+
+# Acknowledgements
+
+The author declares no conflict of interest but wishes to express gratitude for
+a scholarship from Epilepsy-Canada/Parke-Davis, back in 1988, that allowed
+pursuing his career in the development of innovative quantitative methods.
+
+Anthropic Claude AI assistant provided support in suggesting, explaining and
+implementing the statistical test for residual correlations and for the
+conditional logistic regression from the Survival Analysis R package (Therneau,
+2026). It also helped in preparing the figures and in formatting parts of this
+manuscript besides providing valuable comments on a preliminary version.
+
+\clearpage
+
+# References
+
+Achim, A. (2024). 'Blind recovery of sparse factor structures by signal cancellation', arXiv:2404.03781v2 [stat.ME].
+https://doi.org/10.48550/arXiv.2404.03781.
+
+Brewer, M. B., Campbell, D. T., & Crano, W. D. (1970). Testing a single-factor model as an alternative to the misuse of partial correlations in hypothesis-testing research. *Sociometry*, *33*(1), 1-11.
+https://doi.org/10.2307/2786135
+
+Brunner, L. J., & Austin, P. C. (2009). Inflation of type I error rate in
+multiple regression when independent variables are measured with error.
+*Canadian Journal of Statistics*, *37*(1), 33-46. doi:10.1002/cjs.10004
+
+Jöreskog, K. G., & Sörbom, D. (1988). *LISREL 7. A Guide to the Program and Its Application*. Chicago: SPSS Inc.
+
+Rosseel, Y. (2012). lavaan: An R package for structural Equation Modeling.
+*Journal of Statistical Software*, *48*(2), 1–36.
+https://doi.org/10.18637/jss.v048.i02
+
+Shear, B. R., & Zumbo, B. D. (2013). False positives in multiple regression:
+Unanticipated consequences of measurement error in the predictor variables.
+*Educational and Psychological Measurement*, *73*(5), 733–756.
+https://doi.org/10.1177/0013164412473358
+
+Steiger, J. H. (1980). Tests for comparing elements of a correlation matrix.
+*Psychological Bulletin*, *87*(2), 245–251.
+https://doi.org/10.1037/0033-2909.87.2.245
+
+Spearman, C. & Holzinger, K. (1924). The sampling error in the theory of two
+factors. *The British Journal of Psychology*, *15*, 17-19.
+
+Spearman, C. & Holzinger, K. (1925). Note on the Sampling Error of Tetrad
+Differences. *The British Journal of Psychology*, *16*, 86-88.
+
+Therneau, T. M. (2026). *A Package for Survival Analysis in R*.
+https://CRAN.R-project.org/package=survival
+
+Therneau, T. M., & Grambsch, P. M. (2000). *Modeling Survival Data: Extending the Cox Model*. Springer. https://doi.org/10.1007/978-1-4757-3294-8
+
+Ullman, J.B. (1996). Structural Equation Modeling. In B. G. Tabachnick, & L. S.
+Fidell (Eds.), *Using Multivariate Statistics* (3rd ed., pp. 709-819). New York,
+NY: Harper Collins College Publishers.
+
+
+\clearpage
+
+```{r table1, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
+library(knitr)
+library(kableExtra)
+
+tab1 <- data.frame(
+  Variable = c("$v_1$", "$v_2$", "$v_3$", "$v_4$", "$v_5$", "$v_6$",
+               "$v_7$", "$v_8$", "$v_9$", "$v_{10}$", "$v_{11}$",
+               "$v_{12}$", "$v_{13}$", "$v_{14}$"),
+  A1 = c(".4 to .8", ".5 to .9", ".40", ".74", ".40", "-.40",
+         ".50", ".50", ".80", ".60", ".46", ".00", ".54", ".73"),
+  A2 = c(".00", ".00", ".00", ".27", ".55", ".50", ".00", ".00",
+         ".30", ".35", ".60", ".30", ".40", ".30"),
+  A3 = c(".00", ".00", ".00", ".00", ".00", ".00", ".60", ".40",
+         ".40", ".30", ".40", ".40", "-.30", ".40")
+)
+
+kable(tab1,
+      format    = "latex",
+      booktabs  = TRUE,
+      escape    = FALSE,
+      centering = FALSE,
+      align     = c("l", "r", "r", "r"),
+      col.names = c("Variable", "I", "II", "III"),
+      caption   = "Variable coordinates of the test factor structure expressed on three orthogonal axes, the first of which, identified by variables \\protect$v_1$ and \\protect$v_2$, is to be excluded from the remaining variables.",
+      label     = "structure") |>
+  add_header_above(c(" " = 1, "Orthogonal axes" = 3))
+```
+
+\clearpage
+
+\begin{figure}[H]
+% \includegraphics[width=1\linewidth, height=0.88\textheight, keepaspectratio]{Figure1.pdf}
+\caption{Observed means ± 1 standard deviation of the 46 test residual correlations superimposed on their expected values for three sample sizes and five loading levels of the two factor indicator variables.}
+\label{fig_1}
+
+\medskip
+\noindent\textit{Alt text: The top-left of 15 panels is for the FIV loadings of .4, .5, with N=125. The white line representing estimated residual correlations is notably jittered around the black line of expected values but nearly superimposes it at higher sample sizes, even for this smallest FIV correlation. Some jitter remains for le .5, .6 loadings at N=125. The vertical width of the grey ribbon depicting plus-minus one standard deviation of estimates decreases markedly across the panels of increasing sample size and slightly across increasing FIV loadings.}
+\end{figure}
+
+\begin{figure}[H]
+% \includegraphics[width=1\linewidth, height=0.88\textheight, keepaspectratio]{Figure2.pdf}
+\caption{Detection rates and best fitted curves across increasing population residual correlation values by loading level of the pair of factor indicator variables for each sample size.}
+\label{fig_2}
+
+\medskip
+\noindent\textit{Alt text: TPanels for each sample size show the fitted detection success across increasing effect size for the five FIV loading level. At N=125, only the higher FIV loadings at the largest effect size approaches 100\% success. At N=500, the curves asymptote 100\% near effect sizes of about .16 for the largest loading, up to the upper limit of .34 for the .5, .6 set of loadings, while the lowest FIV loading level nears 95\% at the largest effect size. At N=2000, this condition reaches ceiling near effect size of about .25, where the largest three sets of loadings do so by .12 and the fourth by .18.}
+\end{figure}
+
+\clearpage
+
+```{=latex}
+\begin{lstlisting}[language={}, basicstyle=\scriptsize\ttfamily, caption={Commands and outputs in applying factor exclusion to the illustrative data.}, label=lst:roundtbl]
+> tf <- TFcovar()
+
+> TF <- init_SCA(tf$TFdat,tf$N)
+
+> roundTbl(TF$mPaires,3,seuil=-.2)
+    a	    b       c     d      e      f      g      h     I        j      k
+a   ~~~    0.072  0.135  0.235= 0.166  0.531= 0      0.001  0       0      0.271=
+b  1.088    ~~~   0.009  0.412= 0.117  0.096  0.075  0.164  0.008   0.003  0.102
+c  1.404   1.26    ~~~   0.033  0.535= 0.776= 0.001  0.008  0       0.024  0.125
+d  1.083   0.997_ 0.815   ~~~   0.052  0.173  0.022  0.01   0.021   0.001  0.172
+e  0.998   0.912  0.786_ 0.908   ~~~   0.501= 0      0.028  0       0      0.163
+f  2.016   1.966  1.448_ 1.904  1.897_  ~~~   0.002  0.008  0.016   0.002  0.34=
+g  1.634   1.355  1.12   1.37   1.63   0.491   ~~~   0.198  0.221=  0.717= 0.22=
+h  2.483   1.681  1.619  2.228  2.078  0.79   1.29    ~~~   0.235=  0.201= 0.097
+i  1.504   1.248  0.999  1.231  1.715  0.534  0.918_ 0.652_  ~~~    0.266= 0.144
+j  2.883   1.609  1.23   1.679  1.845  0.542  1.073_ 0.831_ 1.211_   ~~~   0.099
+k  5.746_ 10.196  7.892 39.756 26.308 10.467_ 6.503_ 6.448  7.816  39.585   ~~~
+
+> tf15 <- partitionne_R(TF,c(1,5))
+
+> roundTbl(tf15$corr_resid,3,seuil=.05/4)
+    b       c      d      f      g      h       i      j
+b   ~~~    0.462  0.111  0.764  0.002* 0.378   0.012* 0.006*
+c  0.044    ~~~	  0.98   0.479  0.709  0.097   0.172  0.182
+d  0.091   0.002   ~~~   0.887  0.014  0.011*  0.498  0.072
+f -0.018   0.046 -0.009   ~~~   0.415  0.36    0.373  0.39
+g  0.203_ -0.024  0.154 -0.055   ~~~   0.012*  0*     0*
+h  0.056   0.112  0.161_ 0.065  0.182_  ~~~    0*     0.005*
+i  0.161_  0.089  0.042 -0.06   0.275_ 0.283_   ~~~   0*
+j  0.175_ -0.087  0.113 -0.06   0.288_ 0.205_  0.322_  ~~~
+
+> tf910 <- partitionne_R(TF,c(9,10))
+
+> roundTbl(tf910$corr_resid,3,seuil=.05/6)
+    a       b      c      d      e      f       g      h
+a   ~~~    0*     0*     0*     0*     0*      0.612  0.525
+b  0.289_   ~~~   0.001* 0*     0*     0.011*  0.273  0.336
+c  0.439_  0.299_  ~~~   0*     0*     0.001*  0.561  0.104
+d  0.377_  0.281_ 0.298_  ~~~   0*     0.003*  0.11   0.187
+e  0.504_  0.328_ 0.324_ 0.382_  ~~~   0*      0.382  0.561
+f  0.32_   0.192_ 0.255_ 0.226_ 0.265_  ~~~    0.708  0.148
+g  0.038   0.085  0.054  0.122  0.066  0.028    ~~~   0.693
+h  0.048  -0.071  0.146  0.1   -0.043  0.111  -0.03    ~~~
+\end{lstlisting}
+```
