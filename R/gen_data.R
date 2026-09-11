@@ -5,6 +5,7 @@ gen_data <- function(F,N,R=NULL,with_var=FALSE){
 # R, si présente, est la matrice de corrélation des facteurs
 # si with_var est vraie, la dernière colonne de F est la variance des unicités
 # autrement la variance d'unicité est 1 moins la somme des carrés sur les colonnes
+  browser()
   if (!is.matrix(F)){
     nf <- 1
     nv <- length(F)

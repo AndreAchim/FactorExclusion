@@ -1,0 +1,14 @@
+\newcommand{\rc}[1]{r_{\scriptscriptstyle #1}}
+\newcommand{\Rc}[1]{R_{\scriptscriptstyle #1}}
+\makeatletter
+% Fix bold "Summary": replace sffamily+bfseries (unreliable in XeLaTeX)
+% with a direct \textbf in the current (serif) font.
+\renewenvironment{abstract}{%
+  \list{}{\leftmargin=2pc\parsep\z@\itemsep 3\p@}%
+  \item[]\relax
+  \footnotesize\textbf{\abstractname}.~}%
+  {\endlist\normalsize}
+% Fix keywords: the rticles template places \keywords{} after \end{abstract},
+% so the class never outputs them. Redefine to output immediately.
+\def\keywords#1{\medskip\par\noindent\textbf{Keywords}: #1\par}
+\makeatother
