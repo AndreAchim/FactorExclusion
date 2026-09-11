@@ -1,6 +1,7 @@
 # Memoire du projet — SignalCancellation
 
 ## Contexte general
+Depot GitHub : https://github.com/AndreAchim/FactorExclusion
 Projet d'analyse factorielle (Signal Cancellation Analysis — SCA). Donnees typiques : matrices de correlations avec N autour de 175. Les variables R et sessions courantes sont dans `tf$R` et `tf$N`.
 
 ---
