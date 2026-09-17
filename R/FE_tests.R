@@ -31,8 +31,8 @@ FE_tests <- function(FE=NULL,initial=c(.4,.5),saut=c(.1,.1),N=-c(125,500,2000)){
   out[[length(out)+1]] <- list(CRatt=CRatt_all,zro=zro)
   # Rendre efg disponible globalement avant de sourcer les figures
   assign("efg", out, envir = .GlobalEnv)
-  # source("R/fig_biais.R")             # produit Figure1.pdf et Figure1.png
-  # source("R/build_detection_data.R")  # construit df_det, m0q, m3q
-  # source("R/fig_detection.R")         # produit Figure2.pdf et Figure2.png
+  source("R/fig_biais.R")             # produit Figure1.pdf et Figure1.png
+  source("R/build_detection_data.R")  # construit df_det, m0q, m3q
+  source("R/fig_detection.R")         # produit Figure2.pdf et Figure2.png
   return(out)
 }
