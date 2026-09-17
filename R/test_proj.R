@@ -3,23 +3,22 @@ test_proj <- function(AS,cx,cy,srce=NULL){
   #>>>> Paire devrait devenir un vecteur qui peut contenir plus que 2 variables exclusives au facteur à exclure ###
   # Forme pour chaque cas les contrastes AS$excl_weig[v_excl[1]][c(cx,cy)] et AS$excl_weig[v_excl[2]][c(cx,cy)]
   # Moyenne pour chaque cas les produits (cx,cy) de listes différentes
-  ### ci-dessous, description à actualiser
-  # En fait la somme et détermine son rang parmi 1000 cas où la moitié des signes seraient inversés
-  # Cela est fait en comparant la somme de sous-ensembles aléatoires avec 0
   # if (is.null(dim(AS$zdat)))  #
   #   AS <- cree_zdat(AS)       #
+  browser()
   v_excl <- AS$excl_var
   ne <- length(v_excl)
   x <- which(cx==AS$excl_cibles)
   y <- which(cy==AS$excl_cibles)
-  if (is.null(x) || is.null(y)) error("cx et cy doivent être des rangs de variables inclus dans AS$util")
+  if (is.null(x) || is.null(y)) error("cx et cy doivent être des rangs de variables inclus dans AS$excl_cibles")
   XX <- matrix(NA,nrow=AS$nv,ncol=ne+1)
   YY <- matrix(NA,nrow=AS$nv,ncol=ne+1)
   XX[,1] <- AS$GS[,cx]
   YY[,1] <- AS$GS[,cy]
+  browser()
   for (j in 1:ne){
-    XX[,j+1] <- AS$excl_cont[[j]][,x]
-    YY[,j+1] <- AS$excl_cont[[j]][,y]
+    XX[,j+1] <- AS$GS[,x]  # pas génial de mettre x aux deux dernières positions`
+    YY[,j+1] <- AS$GS[,y]
   }
   ne1 <- ne+1
   CR <- rep(NA,ne*ne1)
@@ -33,7 +32,9 @@ test_proj <- function(AS,cx,cy,srce=NULL){
         s <- s+1
         CR[s] <- t(XX[,j]) %*% YY[,k]
         r[s] <- t(sc1(XX[,j])) %*% sc1(YY[,k])
+        if (r[s]>=1) browser()
         tr <- r[s]*sqrt(dl/(1-r[s]*r[s]))
+        AA <- warnings();if(length(AA)>0) browser()
         pr[s] <- 2*pt(-abs(tr),dl)
       }
   }

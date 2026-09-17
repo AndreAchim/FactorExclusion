@@ -1,5 +1,5 @@
 compile <- function(NN){
-  # NN est (k,22,brep) issu de proj_sim()
+  # NN est (k,3,nrep) issu de proj_sim()
   d <- dim(NN)
   np <- d[1]  # nombre de paires
   nr <- d[3]

@@ -1,7 +1,105 @@
+# R standard
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
-^test
-^Matlab
-^SCRoF
+.positai
+.posit/assistant
+
+# LaTeX artefacts de compilation
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.fff
+*.ttt
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+ArticleRSS2026/ArticleRSS2026.tex
+ArticleRSS2026/FactorExclusion.tex
+ArticleRSS2026/ArticleRSS2026.pdf
+ArticleRSS2026/FactorExclusion.pdf
+
+# Copies et vieux brouillons
+ArticleRSS2026/ArticleRSS2026 - Copie.Rmd
+
+# Fichiers de donnees simulees (volumineuses, reproductibles via FE_tests())
+*.rda
+*.dat
+FE_5aout2026
+FE_aout2026
+efg3
+N60_960
+V10F3N2000
+
+# Figures intermediaires et presentations a la racine
+fig15.pdf
+fig15.png
+fig_detection.pdf
+fig_detection.png
+Figure1.png
+Figure2.png
+Rplot.tiff
+Rplot01.tiff
+2026Fig1.jpeg
+2026Fig1_b.eps
+2026Fig1a.jpeg
+2026Fig1b.jpeg
+AAfig1.tiff
+MQSHS_1.tiff
+MQSHS_2.tiff
+Fig1Rm6.tiff
+Fig1_.tiff
+
+# Fichiers personnels et administratifs
+posit_ai_receipt*.pdf
+Invoice*.pdf
+*.pptx
+preview-*.html
+ManuscritExclFact.Rmd
+ManuscritExclFact.html
+/ArticleRSS2026.Rmd
+/ArticleRSS2026.tex
+/ArticleRSS2026.pdf
+/statsoc.cls
+
+# Fichiers Matlab
+Matlab/
+
+# Junk dans R/
+R/AGENTS.md
+R/AGENTS - Copie.md
+R/desktop.ini
+R/conversation-export.html
+R/conversation-export_3mai.html
+R/ResidualCorrelations_August2026.docx
+R/mon_graphique.emf
+R/FE_1.emf
+R/FE_1.eps
+R/FE_1.tiff
+R/FE_Fig1.png
+R/FE_Fig1a.png
+R/AS_error.Rda
+R/optim_tuple.zip
+R/test_k_dim.zip
+R/annule_paire - Copie.R
+R/init_SCA - Copie.R
+R/optim_paire_initiale__0.R
+R/partitionne_R_0.R
+R/FE_tests00.R
+R/FE_tests1.R
+R/sat_sur_facteur_0.R
+R/scand.R
+R/dist_z2old.R
+R/asTuples_old.R
+R/exclusions_0.R
+R/rapport_exclusion_0.R
+R/rapport_exclusion_rp0.R
+R/rapport_exclusion_rp2.R
+R/test_k_dim_0.R
+R/test_rnd.R
+R/prob_corr_residuelles_aa.R
+R/mamami.R
+R/temp.R

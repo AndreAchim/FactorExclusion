@@ -26,6 +26,7 @@ dist_z2 <- function(F,N=75,nrep=200,pF=NULL){
       if (length(out)>2){
 # out <- list(crit=out$objective,po=exp(out$minimum),contrast=contraste,proj=t(contraste) %*% temoins)
         ctrst <- sc1(out$po * dat[,a] - dat[,b])
+        mp <- which(abs(out$proj) == out$crit)
         mp <- mp+(mp>a)+(mp>b)
         prod <- ctrst * dat[,mp]
         tprod <- sign(prod) * sqrt(abs(prod))

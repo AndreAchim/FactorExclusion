@@ -1,6 +1,6 @@
 # Cpaires, Ppaires, R
 asSatPaire <- function(AS, v){
-  inverse <- v[1] > v[2] # Techniquement impossible ???
+  inverse <- (v[1] > v[2]) # Techniquement impossible ???
   if(inverse) v <- v[c(2, 1)]
   
   r <- AS$R[v[1], v[2]]
@@ -10,6 +10,7 @@ asSatPaire <- function(AS, v){
   #crit <- AS$Crit[pa]
   if((p * r) < 0){
     #sat <- c(0, 0)
+    DD <- warnings();if(length(DD)>0) browser()
     sat <- sqrt(abs(r)) * c(1, sign(r))
   } else {
     s1 <- sqrt(r/p)

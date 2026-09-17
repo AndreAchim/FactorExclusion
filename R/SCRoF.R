@@ -27,16 +27,16 @@
 SCRoF <- function(R, N = NULL, seuils = c(.001,.25)){
   AS <- init_SCA(R,N)
   AS$seuils <- sort(seuils)
-  rNEST <- Rnest::nest(AS$R, n = AS$N)
-  rPA <- Rnest::pa(rNEST)
-  cat("NEST suggère", rNEST$nfactors, "facteurs.\n")
-  cat("PA suggère", rPA$nfactors, "facteurs.\n")
-  AS$minFct <- rNEST$nfactors[[1]]
-  AS <- asOrphelines(AS) 
-  # POC: retirer un conditionnel ici, utiliser deux fois ####
+  # La nouvelle approche de n'optimiser que les variables expliquées et de compléter le reste plus tard
+  # ne rend plus pretinent de déterminer le nombre minimal ou maximal de facteurs requis
+  # rNEST <- Rnest::nest(AS$R, n = AS$N)
+  # rPA <- Rnest::pa(rNEST)
+  # cat("NEST suggère", rNEST$nfactors, "facteurs.\n")
+  # cat("PA suggère", rPA$nfactors, "facteurs.\n")
+  # AS$minFct <- rNEST$nfactors[[1]]
+  AS <- asOrphelines(AS)
   AS$pertinent <- setdiff(1:AS$nv, AS$orphelines)
-  # SCRoF starts here ####
-  AS <- asGrappes(AS)
+  AS <- as_grappes(AS)
   if(is.null(AS$VG)) {cat('\nAucune annulation du signal par paire.\n')}
   AS <- asInitFct_Cor(AS) # CHECK 
   AS <- agregeParCorr(AS) # TODO : POC check with another dataset

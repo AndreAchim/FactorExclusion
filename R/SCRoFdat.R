@@ -2,8 +2,18 @@
 SCRoFdat <- function(R, N = NULL, seuils = c(.001,.25)){
   # Preliminaries ####
   AS <- list(dat = R)
+  noms <- colnames(AS$dat)
+  if (is.null(noms)){
+    colnames(AS$dat) <- paste0("V", seq(ncol(AS$dat)))
+    noms <- colnames(AS$dat)
+  }
   if(is.null(N)) {AS$N = nrow(R)} else {AS$N = N}
-  if(isSymmetric(as.matrix(R))) {AS$R <- R} else {AS$R <- cov(R)}
+  if(isSymmetric(as.matrix(R))) {
+    AS$R <- R
+    } else {
+    AS$R <- cov(R)
+ #   colnames(AS$R) <- noms
+    }
   AS$seuils <- sort(seuils)
   AS$et <- sqrt(diag(AS$R)) # AA: Ceci est destiné à pouvoir exprimer la solution factorielle en termes des variables d'origine.
   iet <-  1 / AS$et
@@ -16,6 +26,7 @@ SCRoFdat <- function(R, N = NULL, seuils = c(.001,.25)){
   AS$minFct <- min(rNEST$nfactors[[1]],rPA$nfactors)
   AS$nv <- ncol(AS$R)
   AS$GS <- chol(AS$R)
+  colnames(AS$GS) <- noms
   AS <- asOrphelines(AS)
   return (AS)
 }

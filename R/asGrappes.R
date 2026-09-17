@@ -5,7 +5,6 @@ asGrappes <- function(AS) {
   # du lien plutôt que celle du pire
   # Détermine quels liens sont dans la fourchette AS$seuils[1]=.001 à AS$seuils[2]=.25
   # et crée des branches en fonction de cela, enlevant les liaisons dans l'ordre inverse de leur formation
-  
   AS <- asDistances(AS)
   Z <- linkage(AS$Dist)
   nv <- length(AS$pertinent)
@@ -21,7 +20,12 @@ asGrappes <- function(AS) {
     b <- Gr[[Z[k, 2]]]
     nx <- length(a) * length(b)
     nz <- nz + 1
-    pr[k] <- 1 - pchisq(Z[k,3], nv - 2)^nx  # probabilité ajustée
+    #    pr[k] <- 1 - pchisq(Z[k,3], nv - 2)^nx  # probabilité ajustée
+    # la distance est maintenant -log10(pa) où pa est déjà la probabilité ajustée
+    # Cette probabilité ne serait plus requise mais on la laisse pour compatibilité historique avec la suite
+    #    p <- 10^-Z[k,3]
+    p <- probCorr(Z[k,3],AS$N)$p
+    pr[k] <- 1 - (1-p)^nx
     Gr[[nv + nz]] <- sort(c(a, b))
   }
   AS$GrBrut <- Gr[(nv + 1):length(Gr)]
@@ -30,10 +34,10 @@ asGrappes <- function(AS) {
     AS$VG[[1]] <- list(Gr = NULL, Creat = 'Initial (vide)', Parent = 0, coplan = NULL)
     return(AS)
   }
+  if (any(pr > AS$seuils[2]))
   c <- tail(which(pr > AS$seuils[2]), 1)
-  if (is.null(c)) {
+  else
     c <- -nv
-  }
   Gr0 <- Gr[seq_len(nv + c)]
   res <- asNettoie(Gr0)
   

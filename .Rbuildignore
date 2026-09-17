@@ -7,3 +7,6 @@
 ^test
 ^Matlab
 ^SCRoF
+^\.positai$
+^\.claude$
+^\.posit/assistant$

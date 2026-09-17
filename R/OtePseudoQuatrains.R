@@ -2,7 +2,7 @@ OtePseudoQuatrains <- function(AS) {
   brG <- 1
   while (brG <= length(AS$VG)) {
     copl <- AS$VG[[brG]]$coplan
-    
+    browser()
     if (nrow(copl) > 1) {
       coPlus <- classeTriplets(copl)
       codes <- unlist(unique(coPlus[, ncol(coPlus)]))

@@ -1,20 +1,22 @@
-Package: SignalCancellation
+Package: FactorExclusion
 Type: Package
-Title: Signal Cancellation
-Version: 0.0
+Title: Factor Exclusion and Residual Correlation Analysis
+Version: 0.2.0
+Date: 2026-09-17
 Authors@R:
-    c(person(given = "P.-O.",
-             family = "Caron",
-             role = c("aut","cre","cph"),
-             email = "pocaron19@gmail.com",
-             comment = c(ORCID = "0000-0001-6346-5583")),
-             person(given = "André",
+    c(person(given = "André",
              family = "Achim",
-             role = c("aut","cph")),
-             email = "achim.andre@uqam.ca")
-Author: P.-O. Caron [aut, cre, cph], André Achim [aut, cph]
-Maintainer: P.-O. Caron <pier-olivier.caron@teluq.ca>
-Description: Signal Cancelling Factor Analysis.
+             role = c("aut", "cre", "cph"),
+             email = "achim.andre@uqam.ca"),
+      person(given = "P.-O.",
+             family = "Caron",
+             role = c("aut", "cph"),
+             email = "pocaron19@gmail.com",
+             comment = c(ORCID = "0000-0001-6346-5583")))
+Description: Signal Cancellation Factor Analysis (SCA): identifies pairs of
+    variables that cancel each other's signal on a common factor (factor-inferred
+    variables, FIVs). Provides tools for residual correlation analysis, FIV
+    selection, and simulation of detection rates. Companion code for Achim (2026).
 License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true
@@ -24,4 +26,5 @@ Imports:
   Rnest (>= 1.0),
   CCP (>= 1.2),
   MASS (>= 7.3-61),
-  psych (>= 2.5.3)
+  psych (>= 2.5.3),
+  expm (>= 0.999-0)

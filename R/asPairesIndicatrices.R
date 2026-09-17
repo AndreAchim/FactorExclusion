@@ -1,15 +1,25 @@
 asPairesIndicatrices <- function(AS) {
-  # Identifier les variables indicatrices, s'il y en a pour la branche AS$branche
+  # Identifier les variables indicatrices, en vérifiant l'annulation de toutes les paires de variables non-orphelines
   AS$Cpaires <- combn(AS$pertinent, 2) # tous les sous-ensembles de 2 parmi les variables pertinentes
   nc <- ncol(AS$Cpaires)
-  AS$Crit <- rep(0, nc)
-  AS$Prob <- rep(0, nc)
-  AS$Corr <- matrix(0, AS$nv, nc)
-  AS$Ppaires <- rep(0, nc)
-  AS$doublet <- NULL
+  AS$Crit <- rep(0, nc)      # max(abs(Corr))
+  AS$Prob <- rep(0, nc)      # corrigé pour le nombre de corrélations
+  AS$Ppaires <- rep(0, nc)   # les poids d'annulation
+  AS$satPaires <- matrix(NA,nrow=2,ncol=nc)
+  # AS$Corr <- matrix(0, AS$nv-2-length(AS$orphelines), nc)
+  AS$doublet <- NULL  
+  ASm <- matrix(0, nrow = AS$nv, ncol = AS$nv)
+  browser()
   for (k in 1:nc) {
-    AS <- asAnnulePaire(AS, k)  # optimiser les variables de la rangée k de AS$Cpaires
+    AS <- as_annule_paire(AS, k)  # optimiser les variables de la rangée k de AS$Cpaires
+    ASm[AS$Cpaires[k,1],AS$Cpaires[k,2]] <- AS$Prob[k]
+    ASm[AS$Cpaires[k,2],AS$Cpaires[k,1]] <- AS$Ppaires[k]
   }
-  AS$z2 <- (AS$Corr)^2 * (AS$N - 1)
+  AS$mPaires <- ASm
+  browser()
+  
+  # for (k in 1:nc) {
+  #   AS <- asAnnulePaire(AS, k)  # optimiser les variables de la rangée k de AS$Cpaires
+  # }
   return(AS)
 }
